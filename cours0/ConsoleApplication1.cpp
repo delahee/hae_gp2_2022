@@ -3,18 +3,51 @@
 
 #include <iostream>
 
+#include <string> //fichier systeme
+//#include "string" // fichier du projet
+
+using namespace std;
+
+struct Toto{
+    float x = 0.777f;
+};
+
 int main()
 {
-    std::cout << "Hello World!\n";
+    {
+        //std::cout << "Hello World!\n";
+        printf("12345\n");
+        printf("0\n");
+        std::string zero = "0";
+        char zeroC[] = "0";
+
+        std::cout << zeroC << " c++ style \n";
+        //console.print( zeroC ) 
+        printf("%s c style\n", zeroC);
+        printf("%f \n", 0.66666f);
+
+        float half = 0.5f;
+        //afficher ca en c style avec la chaine de format %f
+        printf("%f\n", half);
+
+        // 
+        //et en c++ style avec std::to_string()
+
+        std::cout << std::to_string(half) << "\n";
+    }
+    {
+        int val = 123456789123456789;//supérieur a md cad plus de 32bits
+        printf("%i\n", val); 
+        cout << to_string(val) << "\n";
+        printf("%d\n", 666);
+
+        auto val64 = 123456789123456789;
+		printf("%lld\n", val64);
+		cout << to_string(val64)<<"\n";
+    }
+
+    {
+        Toto a;
+		cout << to_string(a.x) << "\n";
+    }
 }
-
-// Exécuter le programme : Ctrl+F5 ou menu Déboguer > Exécuter sans débogage
-// Déboguer le programme : F5 ou menu Déboguer > Démarrer le débogage
-
-// Astuces pour bien démarrer : 
-//   1. Utilisez la fenêtre Explorateur de solutions pour ajouter des fichiers et les gérer.
-//   2. Utilisez la fenêtre Team Explorer pour vous connecter au contrôle de code source.
-//   3. Utilisez la fenêtre Sortie pour voir la sortie de la génération et d'autres messages.
-//   4. Utilisez la fenêtre Liste d'erreurs pour voir les erreurs.
-//   5. Accédez à Projet > Ajouter un nouvel élément pour créer des fichiers de code, ou à Projet > Ajouter un élément existant pour ajouter des fichiers de code existants au projet.
-//   6. Pour rouvrir ce projet plus tard, accédez à Fichier > Ouvrir > Projet et sélectionnez le fichier .sln.
