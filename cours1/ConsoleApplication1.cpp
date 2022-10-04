@@ -221,7 +221,10 @@ public:
 
 	//invariant : mon tableau est trié
 	void insertOrderInferior( int val ){
-
+		//agrandir de 1
+		//trouver l'endroit d'insertion
+		//decaller de 1 vers la droite a l'endroit d'insertion
+		//inserer la nouvelle valeur
 	}
 
 	int getSize() {
