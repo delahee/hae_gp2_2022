@@ -200,18 +200,36 @@ public:
 
 		bool grow = nuSize > size;
 
-		auto ndata = new int[nuSize];
+		auto nuData = new int[nuSize];
 		for (int i = 0; i < nuSize; ++i)
-			ndata[i] = 0;
+			nuData[i] = 0;
 
 		int targetSize = (grow) ? size : nuSize;
 		for (int i = 0; i < targetSize; ++i)
-			ndata[i] = data[i];
+			nuData[i] = data[i];
 
-		int* odata = data;
-		data = ndata;
+		int* oldData = data;
+		data = nuData;
 		size = nuSize;
-		delete[]odata;
+		delete[]oldData;
+	};
+
+	
+	static int cmp(const void* a0, const void* a1) {
+		int* i0 = (int*)a0;
+		int* i1 = (int*)a1;
+		//(int) a0 <- addresse de a0 mais sous forme entiere 0xfzbuzv=> 501538687
+
+		int i0Val = *i0;
+		int i1Val = *i1;
+		if (i0Val < i1Val) return -1;
+		if (i0Val > i1Val) return 1;
+		return 0;
+	};
+
+	void sort() {
+		//use sort(data, function);
+		qsort(data, size, sizeof(int), cmp);
 	};
 
 	~IntArray() {
@@ -219,13 +237,43 @@ public:
 		size = 0;
 	};
 
-	//invariant : mon tableau est trié
-	void insertOrderInferior( int val ){
-		//agrandir de 1
-		//trouver l'endroit d'insertion
-		//decaller de 1 vers la droite a l'endroit d'insertion
-		//inserer la nouvelle valeur
+	//renvoie la position d'insertion, cad la derniere position valable ou mettre cet élément dans un
+	//tablau trié
+	int searchOrderInferior(int val){
+		int idx = 0;
+		while ((data[idx] < val) && (idx < size))
+			idx++;
+		return idx;
 	}
+
+
+	//warning this function breaks the invariant by inserting a sentient
+	void shiftRight(int idx) {
+		if ((idx < 0) || (idx >= size))
+			return;
+		for (int i = size - 1; i > idx; --i)
+			data[i] = data[i - 1];
+		data[idx] = 0;
+	};
+
+	//invariant : mon tableau est trié
+	bool isSorted() {
+		for (int i = 0; i < size - 1; ++i)
+			if (data[i] > data[i + 1])
+				return false;
+		return true;
+	};
+
+	void insertOrderInferior(int val) {
+		//trouver l'endroit d'insertion
+		// 
+		int pos = searchOrderInferior(val);
+		resize(getSize() + 1);
+		//decaller de 1 vers la droite a l'endroit d'insertion
+		shiftRight(pos);
+		//inserer la nouvelle valeur
+		set(pos, val);
+	};
 
 	int getSize() {
 		return size;
@@ -273,15 +321,59 @@ void testArray(){
 		IntArray a(8);
 		for(int i = 0; i < 8;++i)
 			a.set(i, i*i);
-		a.insertOrderInferior( 21 ); // order sur A par le predicat f : a[i] < a[i+1]
-
-		/*
-		auto predicate = [](int & e0,int & e1) {
-			return e0 < e1;
-		};
-		a.insert(21, predicate);
-		*/
+		a.insertOrderInferior( 8 ); // order sur A par le predicat f : a[i] < a[i+1]
+		int here = 0;
 	}
+
+	{
+		IntArray a(0);
+		a.insertOrderInferior(18); // order sur A par le predicat f : a[i] < a[i+1]
+		a.insertOrderInferior(-45618); // order sur A par le predicat f : a[i] < a[i+1]
+		a.insertOrderInferior(81456); // order sur A par le predicat f : a[i] < a[i+1]
+		a.insertOrderInferior(358); // order sur A par le predicat f : a[i] < a[i+1]
+		a.insertOrderInferior(18); // order sur A par le predicat f : a[i] < a[i+1]
+		a.insertOrderInferior(-18); // order sur A par le predicat f : a[i] < a[i+1]
+		a.insertOrderInferior(8); // order sur A par le predicat f : a[i] < a[i+1]
+		assert(a.isSorted());
+		int here = 0;
+	}
+
+	{
+		IntArray a(5);
+		a.set(0,18); // order sur A par le predicat f : a[i] < a[i+1]
+		a.set(1,-45618); // order sur A par le predicat f : a[i] < a[i+1]
+		a.set(2,81456); // order sur A par le predicat f : a[i] < a[i+1]
+		a.set(3,358); // order sur A par le predicat f : a[i] < a[i+1]
+		a.set(4,18); // order sur A par le predicat f : a[i] < a[i+1]
+		a.sort();
+		assert(a.isSorted());
+		int here = 0;
+	}
+
+	{
+		IntArray a(5);
+		for (int i = 0; i < 5; ++i) {
+			a.set(i, i * i);
+			printf("%d ", a.get(i));
+		}
+		printf("\n");
+		int here = 0;
+		printf("%d\n", a.searchOrderInferior(-1));
+		printf("%d\n", a.searchOrderInferior(8));
+		printf("%d\n", a.searchOrderInferior(22));
+	}
+	{
+		IntArray a(5);
+		for (int i = 0; i < 5; ++i) {
+			a.set(i, i * i);
+			printf("%d ", a.get(i));
+		}
+
+		a.shiftRight(4);
+		printf("%d\n", a.searchOrderInferior(22));
+	}
+
+	int here = 0;
 }
 
 /**
