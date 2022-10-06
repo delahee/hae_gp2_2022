@@ -7,106 +7,12 @@
 //#include "string" // fichier du projet
 #include <unordered_map>
 
+#include "IntArray.hpp"
+#include "Vec.hpp"
+#include "LinkedListInt.hpp"
+#include "IntTree.hpp"
+
 using namespace std;
-
-struct Toto{
-    float x = 0.777f;
-};
-
-struct Vec2{
-    float x = 0;
-    float y = 0;
-    Vec2(){}
-    Vec2(float _x, float _y) {
-		x = _x;
-        y = _y;
-    };
-	void add(Vec2 v) {
-		x += v.x;
-		y += v.y;
-	};
-
-	void addRef(Vec2& v) {
-		x += v.x;
-		y += v.y;
-	};
-
-	void addPtr(Vec2* v) {
-		//??
-
-       // x += v->x;
-        x += (*v).x;
-        //y += v->y;
-	};
-};
-
-struct Vec3 : public Vec2{
-	float z = 0;
-
-    Vec3(){}
-
-    Vec3(float _x, float _y, float _z) : Vec2(_x, _y) {
-        z = _z;
-    };
-
-    void add(Vec3 v) {
-        Vec2::add(v);
-        z += v.z;
-    };
-
-	void addRef(Vec3& v) {
-		Vec2::addRef(v);
-		z += v.z;
-	}; 
-
-    void addPtr(Vec3*v) {
-		Vec2::addPtr(v);
-        z += v->z;
-    };
-
-};
-
-struct Vec4{
-    float x = 0.0f;
-    float y = 0.0f;
-    float z = 0.0f;
-    float w = 0.0f;
-
-    Vec4(float x = 0.0f, float y = 0.0f, float z = 0.0f, float w = 0.0f) {
-        this->x = x;
-        this->y = y;
-        this->z = z;
-        this->w = w;
-    }
-
-    //
-    Vec4 add(const Vec4& v) {
-        return Vec4(x + v.x, y + v.y, z + v.z, w + v.w);
-    };
-
-	Vec4 sub(const Vec4& v) {
-		return Vec4(x - v.x, y - v.y, z - v.z, w - v.w);
-	}
-
-	Vec4 mul(const Vec4& v) {
-        return Vec4(x * v.x, y * v.y, z * v.z, w * v.w);
-	}
-
-	Vec4 div(const Vec4& v) {
-        return Vec4(x / v.x, y / v.y, z / v.z, w / v.w);
-	}
-
-	void incr(const Vec4& v) {
-		x += v.x;
-		y += v.y;
-		z += v.z;
-		w += v.w;
-	}
-
-    static Vec4 ZERO;
-};
-
-Vec4 Vec4::ZERO = Vec4();
 
 void testVec4(){
 	{
@@ -167,127 +73,26 @@ void testVec4(){
 	}
 }
 
-
-class IntArray{
-public:
-
-	IntArray(int maxSize) {//
-		//alloue data
-		//change la taille reelle
-		data = new int[maxSize];
-		//data = (int*) malloc(maxSize*sizeof(int));
-		size = maxSize;
-		for (int i = 0; i < maxSize; ++i)
-			data[i] = 0;
-	};
-
-	int get(int idx) {
-		if (idx < 0) throw "out of bound exception, bound cannot be inf to 0";
-		if (idx >= size) throw "out of bound exception, bound cannot be sup to size";
-
-		return data[idx];
-	};
-
-	void set(int idx, int value) {
-		if (idx < 0) throw "out of bound exception, bound cannot be inf to 0";
-		if (idx >= size) throw "out of bound exception, bound cannot be sup to size";
-		data[idx] = value;
-	};
-
-	void resize(int nuSize) {
-		if (nuSize == size)
-			return;
-
-		bool grow = nuSize > size;
-
-		auto nuData = new int[nuSize];
-		for (int i = 0; i < nuSize; ++i)
-			nuData[i] = 0;
-
-		int targetSize = (grow) ? size : nuSize;
-		for (int i = 0; i < targetSize; ++i)
-			nuData[i] = data[i];
-
-		int* oldData = data;
-		data = nuData;
-		size = nuSize;
-		delete[]oldData;
-	};
-
-	
-	static int cmp(const void* a0, const void* a1) {
-		int* i0 = (int*)a0;
-		int* i1 = (int*)a1;
-		//(int) a0 <- addresse de a0 mais sous forme entiere 0xfzbuzv=> 501538687
-
-		int i0Val = *i0;
-		int i1Val = *i1;
-		if (i0Val < i1Val) return -1;
-		if (i0Val > i1Val) return 1;
-		return 0;
-	};
-
-	void sort() {
-		//use sort(data, function);
-		qsort(data, size, sizeof(int), cmp);
-	};
-
-	~IntArray() {
-		delete[] data;
-		size = 0;
-	};
-
-	//renvoie la position d'insertion, cad la derniere position valable ou mettre cet élément dans un
-	//tablau trié
-	int searchOrderInferior(int val){
-		int idx = 0;
-		while ((data[idx] < val) && (idx < size))
-			idx++;
-		return idx;
-	}
-
-
-	//warning this function breaks the invariant by inserting a sentient
-	void shiftRight(int idx) {
-		if ((idx < 0) || (idx >= size))
-			return;
-		for (int i = size - 1; i > idx; --i)
-			data[i] = data[i - 1];
-		data[idx] = 0;
-	};
-
-	//invariant : mon tableau est trié
-	bool isSorted() {
-		for (int i = 0; i < size - 1; ++i)
-			if (data[i] > data[i + 1])
-				return false;
-		return true;
-	};
-
-	void insertOrderInferior(int val) {
-		//trouver l'endroit d'insertion
-		// 
-		int pos = searchOrderInferior(val);
-		resize(getSize() + 1);
-		//decaller de 1 vers la droite a l'endroit d'insertion
-		shiftRight(pos);
-		//inserer la nouvelle valeur
-		set(pos, val);
-	};
-
-	int getSize() {
-		return size;
-	};
-
-protected:
-	int*	data = nullptr;
-	int		size = 0;
-};
-
 static void assert(bool test) {
 	if (!test)
 		throw "assert";
 };
+
+void testLinkedList(){
+	{
+		LinkedListInt toto;
+		toto.insert(666);
+		toto.insert(667);
+		toto.insert(668);
+		toto.print();
+		toto.remove(666);
+		toto.print();
+		toto.remove(667);
+		toto.remove(668);
+		toto.print();
+	}
+}
+
 
 void testArray(){
 
@@ -356,7 +161,6 @@ void testArray(){
 			a.set(i, i * i);
 			printf("%d ", a.get(i));
 		}
-		printf("\n");
 		int here = 0;
 		printf("%d\n", a.searchOrderInferior(-1));
 		printf("%d\n", a.searchOrderInferior(8));
@@ -435,16 +239,23 @@ void Strcpy3(char* dst, const char* src) {
 	for(int i = 0; i < len; i++)
 		dst[i] = src[i];
 }
-/*
-void Strncpy(char*, const char*, int nchars){
 
-}*/
+static void testTree(){
+	IntTreeController r;
 
-int main()
-{
+	r.insert(2);
+	r.insert(1);
+	r.insert(13);
+	r.insert(-5);
+
+	r.print();
+}
+
+int main(){
 	testVec4();
 	testArray();
-
+	testLinkedList();
+	testTree();
 	{
 		char str[] = "sapin";
 		char str2[] = "sapinatator";
