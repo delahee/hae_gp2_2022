@@ -249,9 +249,48 @@ static void testTree(){
 	r.insert(-5);
 
 	r.print();
+
+	cout << "*************\n";
+	IntTreeController rm;
+	rm.insert(2);
+	rm.print();
+	rm.remove(2); rm.print();
+
+	rm.insert(2);
+	rm.insert(3);
+	rm.insert(4);
+
+	rm.print();
+
+	rm.remove(2); rm.print();
+	rm.remove(3); rm.print();
+	rm.remove(4); rm.print();
+
+	cout << "*************\n";
+	IntTreeController rm1;
+
+	clock_t now = clock();
+	srand(now);
+	std::vector<int> data;
+	for(int i = 0; i < 10;++i){
+		data.push_back(rand() % 20 - 10);
+	}
+	rm1.print();
+	for( auto v : data){
+		rm1.insert(v);
+	}
+	rm1.print();
+	for (auto v : data) {
+		cout <<" removing "<< std::to_string(v)<<"\n";
+		rm1.remove(v);
+		rm1.print();
+	}
+	rm1.print();
 }
 
 int main(){
+	clock_t init = clock();
+
 	testVec4();
 	testArray();
 	testLinkedList();

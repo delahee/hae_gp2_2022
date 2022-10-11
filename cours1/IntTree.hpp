@@ -27,8 +27,5 @@ public:
 	void remove(int val) {
 		root = root->remove(val);
 	};
-	void print() {
-		if (root)
-			root->print();
-	};
+	void print();
 };
