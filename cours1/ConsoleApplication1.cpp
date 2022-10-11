@@ -361,10 +361,19 @@ void testFloatArray(){
 
 	//std::function<void(float val)> = ...
 	auto maFonction = [](float val){
-		printf("%d ", val);
+		//printf("%f ", val);
+		cout << std::to_string(val) << " ";
 	};
 	arr2.iter(maFonction);
 	//3 2 1 ?
+
+	float totalSum = 0;
+	auto sumFunction = [&totalSum](float val) {
+		//calculer la somme total
+
+	};
+	arr2.iter(sumFunction);
+	//afficher la somme total
 }
 
 int main(){

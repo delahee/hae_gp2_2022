@@ -35,17 +35,20 @@ public:
 	}
 
 	void iter(std::function<void(float)> f) {
-
-	}
+		int sz = size();
+		for (int i = 0; i < sz; i++)
+			f(data[i]);
+	};
 
 	void push_first(float val) {
 		//if necessary 
 		if( current >= allocSize-1)
 			resize(allocSize + 1);
 
-		//shift!
+		//shift right
 		for (int i = current; i > 0; --i)
 			data[i] = data[i - 1];
+		//
 
 		data[0] = val;
 		current ++;
