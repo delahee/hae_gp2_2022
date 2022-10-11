@@ -341,10 +341,30 @@ void testFloatArray(){
 	arr.push_back(16);
 	arr.push_back(15);
 	arr.resize(150);
-	for(int i = 0; i < arr.size();++i){
-		printf("%d => %f ", i, arr.get(i));
-	}
-	printf("\n");
+	arr.print();
+
+	cout << "*****";
+
+	FloatArray arr1;
+	arr1.push_back(3);
+	arr1.push_back(4);
+	arr1.push_back(5);
+	arr1.print();
+
+	cout << "*****";
+	FloatArray arr2;
+	arr2.push_first(1);
+	arr2.push_first(2);
+	arr2.push_first(3);
+	arr2.print();
+	cout << "*****";
+
+	//std::function<void(float val)> = ...
+	auto maFonction = [](float val){
+		printf("%d ", val);
+	};
+	arr2.iter(maFonction);
+	//3 2 1 ?
 }
 
 int main(){

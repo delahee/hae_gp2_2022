@@ -1,20 +1,28 @@
 #pragma once
 
 #include <cstdlib>
+#include <functional>
 
 //array with an alloc_size and a 'current' last element
 class FloatArray {
 	// constructeur
 public:
-	FloatArray(int nb) {
-		data =(float*) malloc(nb*sizeof(float));
+	FloatArray(int nb = 0) {
+		data =(float*) malloc(nb*sizeof(float) + 1);
 		allocSize = nb;
 		for (int i = 0; i < allocSize; ++i)
-			data[i] = 0;
+			data[i] = 0.0f;
 	}
 
 	~FloatArray() {
 		free(data);
+	}
+
+	void print(){
+		for (int i = 0; i < size(); ++i) {
+			printf("%d => %f ", i, get(i));
+		}
+		printf("\n");
 	}
 
 	void resize(int sz){
@@ -26,8 +34,21 @@ public:
 		allocSize = sz;
 	}
 
+	void iter(std::function<void(float)> f) {
+
+	}
+
 	void push_first(float val) {
-		//
+		//if necessary 
+		if( current >= allocSize-1)
+			resize(allocSize + 1);
+
+		//shift!
+		for (int i = current; i > 0; --i)
+			data[i] = data[i - 1];
+
+		data[0] = val;
+		current ++;
 	};
 
 	void push_back(float val) {
