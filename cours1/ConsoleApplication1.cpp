@@ -391,7 +391,8 @@ void testFloatArray(){
 void testLib(){
 	char sapin[6] = "sapin";
 	char buffer[512] = {};
-	Lib::Memcpy(buffer, sapin, 5);
+	Lib::Memcpy(buffer, sapin, 6);
+	int here = 0;
 }
 
 int main(){
