@@ -14,6 +14,13 @@ public:
 			data[i] = 0.0f;
 	}
 
+	FloatArray(const FloatArray& from) {
+		resize(from.current);
+		current = from.current;
+		for (int i = 0; i < current; ++i)
+			data[i] = from.data[i];
+	};
+
 	~FloatArray() {
 		free(data);
 	}
@@ -40,19 +47,7 @@ public:
 			f(data[i]);
 	};
 
-	void push_first(float val) {
-		//if necessary 
-		if( current >= allocSize-1)
-			resize(allocSize + 1);
-
-		//shift right
-		for (int i = current; i > 0; --i)
-			data[i] = data[i - 1];
-		//
-
-		data[0] = val;
-		current ++;
-	};
+	void push_first(float val);
 
 	void push_back(float val) {
 		//
@@ -76,6 +71,8 @@ public:
 	int	size() {
 		return current;
 	};
+
+	static FloatArray fromArray(float* data, int len);;
 
 protected:
 	float*	data = nullptr;

@@ -13,6 +13,8 @@
 #include "IntTree.hpp"
 #include "FloatArray.hpp"
 
+#include "Lib.hpp"
+
 using namespace std;
 
 void testVec4(){
@@ -367,13 +369,29 @@ void testFloatArray(){
 	arr2.iter(maFonction);
 	//3 2 1 ?
 
+	printf("\n***SUM***");
 	float totalSum = 0;
 	auto sumFunction = [&totalSum](float val) {
 		//calculer la somme total
-
+		totalSum += val;
 	};
 	arr2.iter(sumFunction);
 	//afficher la somme total
+
+	std::cout << std::to_string(totalSum);
+
+	printf("\n***\n");
+	float abc[3] = { 66,67,68.5 };
+	FloatArray toto = FloatArray::fromArray(abc, 3);
+	toto.print();
+
+	FloatArray tata = toto; //?
+}	
+
+void testLib(){
+	char sapin[6] = "sapin";
+	char buffer[512] = {};
+	Lib::Memcpy(buffer, sapin, 5);
 }
 
 int main(){
@@ -384,6 +402,7 @@ int main(){
 	//testLinkedList();
 	//testTree();
 	//testC();
-	testFloatArray();
+	//testFloatArray();
 
+	testLib();
 }
