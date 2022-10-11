@@ -11,6 +11,7 @@
 #include "Vec.hpp"
 #include "LinkedListInt.hpp"
 #include "IntTree.hpp"
+#include "FloatArray.hpp"
 
 using namespace std;
 
@@ -288,25 +289,72 @@ static void testTree(){
 	rm1.print();
 }
 
+void testStr(){
+	char str[] = "sapin";//local => existe plus du tout a la fin de fonction
+	//char* str = malloc();//global => existe tjrs a la fin de fonction
+	char str2[] = "sapinatator";
+	int len = Strlen(str);
+	int len2 = Strlen2(str);
+	int len3 = Strlen3(str);
+	int cnt0 = Countc(str, 'a');
+	int cnt1 = Countc(str2, 'a');
+
+	char str256[256] = {};
+	Strcpy3(str256, str);
+	int here = 0;
+}
+
+void testC(){
+	//creer un tableau de 150 éléments
+	int tata[150] = {};
+	//int* toto = new int[150];
+	//int* tata = (int*) malloc(150 * sizeof(int));
+	//new int[150] = > 
+	//	new ((int*)malloc(150 * sizeof(int))) (int) (150);
+	// le remplir des carré successif
+
+	for (int i = 0; i < 150; ++i)
+		tata[i] = i * i;
+	//?
+
+	//l'afficher a l'envers
+	//delete[] toto;
+	for (int i = 0; i < 150; ++i)
+		printf("%d ", tata[i]);
+	printf("\n");
+
+	//stack pointer => pointeur sur le debut de la memoire locale
+	//program pointer
+	{
+		int o = 0;//sp+=4; [sp] = 0;
+		int* sapin = (int*)malloc(8); //sp+=sizeof(int*); [sp] = [malloc(8)]
+	}
+
+	{
+		//int a = o;
+	}
+
+}
+
+void testFloatArray(){
+	FloatArray arr(16);
+	arr.push_back(16);
+	arr.push_back(15);
+	arr.resize(150);
+	for(int i = 0; i < arr.size();++i){
+		printf("%d => %f ", i, arr.get(i));
+	}
+	printf("\n");
+}
+
 int main(){
 	clock_t init = clock();
 
-	testVec4();
-	testArray();
-	testLinkedList();
-	testTree();
-	{
-		char str[] = "sapin";
-		char str2[] = "sapinatator";
-		int len = Strlen(str);
-		int len2 = Strlen2(str);
-		int len3 = Strlen3(str);
-		int cnt0 = Countc(str,'a');
-		int cnt1 = Countc(str2,'a');
-
-		char str256[256] = {};
-		Strcpy3(str256, str);
-		int here = 0;
-	}
+	//testVec4();
+	//testArray();
+	//testLinkedList();
+	//testTree();
+	//testC();
+	testFloatArray();
 
 }
