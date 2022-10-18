@@ -11,6 +11,7 @@
 #include "Vec.hpp"
 #include "LinkedListInt.hpp"
 #include "IntTree.hpp"
+#include "StringTree.hpp"
 #include "FloatArray.hpp"
 
 #include "Lib.hpp"
@@ -395,6 +396,41 @@ void testLib(){
 	int here = 0;
 }
 
+void testStringTree() {
+
+	char msg[] = "mais ou est donc or ni car";
+
+	const char* findO = Lib::StrChr( msg,'o');
+		
+	cout << findO << " ?";
+
+	StringTreeController stc;
+	std::string t0("toto");
+	std::string t1("tata");
+	std::string t2("TAta");
+	std::string t3("taktak");
+
+	stc.insert( t0 );
+	stc.insert( t1 );
+	stc.insert( t2 );
+	stc.insert( t3 );
+	stc.print();
+
+	std::string tu("tata");
+
+	auto res =stc.searchString(tu);
+
+	if (res)
+		res->print();
+	else
+		printf("not found!");
+
+	assert(Lib::StrPrefix("pin", "sapin") == false);
+	assert(Lib::StrPrefix("sapin", "sa") == true);
+	auto s = Lib::StrStr("sapin", "pin");
+	assert( strcmp( "pin", s) == 0);
+}
+
 int main(){
 	clock_t init = clock();
 
@@ -404,6 +440,7 @@ int main(){
 	//testTree();
 	//testC();
 	//testFloatArray();
+	testStringTree();
 
 	testLib();
 }
