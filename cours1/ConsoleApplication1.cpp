@@ -439,6 +439,8 @@ void testStringTree() {
 	const char lapin[] = "lapin";
 	const char carotte[]="carotte";
 
+	char dst[256] = "lapinlapin";
+
 	assert(Lib::StrChrRec(lapin, 'n'));
 	assert(Lib::StrChrRec(lapin, 'i'));
 	assert(Lib::StrChrRec(lapin, 'l'));
@@ -449,8 +451,48 @@ void testStringTree() {
 	assert(! Lib::StrStrRec(lapin,"toto"));
 	assert(Lib::StrStrRec("",""));
 	assert(!Lib::StrStrRec("","sapin"));
+	assert(9 == Lib::StrLenRec("sapinator"));
+	assert(0 == Lib::StrLenRec(""));
 
+
+	Lib::StrCpy(dst, "toto");
+	assert(Lib::StrLenRec(dst) == 4);
+	assert(Lib::StrCmp("a","b") == -1);
+	assert(Lib::StrCmp("c","b") == 1);
+	assert(Lib::StrCmp("b","b") == 0);
+	assert(Lib::StrCmp("","") == 0);
+	assert(Lib::StrCmp("","a") == -1);
 	printf("\n========== OK============\n");
+}
+
+void testArith(){
+	assert( 9 == Lib::add(-1,10));
+	assert( 4 == Lib::add(2,2));
+	assert( -11 == Lib::sub(-1,10));
+	assert( 4 == Lib::mul(2,2));
+	assert( -4 == Lib::mul(2,-2));
+	assert( -4 == Lib::mul(-2,2));
+	assert( 4 == Lib::mul(-2,-2));
+	assert( 0 == Lib::mul(0,-2));
+	assert( 1 == Lib::mul(1,1));
+	assert( 81 == Lib::mul(9,9));
+
+	assert( 0 == Lib::div(3,9));
+	assert( 3 == Lib::div(3,1));
+	assert( 4 == Lib::div(16,4));
+	assert( 3 == Lib::div(15,4));
+	assert( -3 == Lib::div(-15,4));
+	assert( -3 == Lib::div(15,-4));
+	assert( 3 == Lib::div(-15,-4));
+	assert( 1 == Lib::div(6,4));
+
+
+	assert( 24 == Lib::mulTerminalRecursion(6,4));
+	assert( 1 == Lib::divTR(6,4));
+	assert( 3 == Lib::divTR(15,4));
+	assert(3 == Lib::divTR(-15, -4));
+
+	int there = 0;
 }
 
 int main(){
@@ -465,4 +507,6 @@ int main(){
 	testStringTree();
 
 	testLib();
+
+	testArith();
 }
