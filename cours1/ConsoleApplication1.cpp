@@ -400,8 +400,8 @@ void testStringTree() {
 
 	char msg[] = "mais ou est donc or ni car";
 
-	const char* findO = Lib::StrChr( msg,'o');
-		
+	const char* findO = Lib::StrChr(msg, 'o');
+
 	cout << findO << " ?";
 
 	StringTreeController stc;
@@ -410,15 +410,15 @@ void testStringTree() {
 	std::string t2("TAta");
 	std::string t3("taktak");
 
-	stc.insert( t0 );
-	stc.insert( t1 );
-	stc.insert( t2 );
-	stc.insert( t3 );
+	stc.insert(t0);
+	stc.insert(t1);
+	stc.insert(t2);
+	stc.insert(t3);
 	stc.print();
 
 	std::string tu("tata");
 
-	auto res =stc.searchString(tu);
+	auto res = stc.searchString(tu);
 
 	if (res)
 		res->print();
@@ -428,7 +428,29 @@ void testStringTree() {
 	assert(Lib::StrPrefix("pin", "sapin") == false);
 	assert(Lib::StrPrefix("sapin", "sa") == true);
 	auto s = Lib::StrStr("sapin", "pin");
-	assert( strcmp( "pin", s) == 0);
+	assert(strcmp("pin", s) == 0);
+
+	int tabSrc[] = { 0,1,2,3,4,0,1,2,3,4 };
+	int tabDst[256] = { };
+	Lib::MemcpyRec((char*)tabDst, (char*)tabSrc, sizeof(tabSrc));
+	int here = 0;
+
+
+	const char lapin[] = "lapin";
+	const char carotte[]="carotte";
+
+	assert(Lib::StrChrRec(lapin, 'n'));
+	assert(Lib::StrChrRec(lapin, 'i'));
+	assert(Lib::StrChrRec(lapin, 'l'));
+	assert(! Lib::StrChrRec(lapin, 'z'));
+
+	assert( Lib::StrStrRec(lapin,"la"));
+	assert( Lib::StrStrRec(lapin,"pin"));
+	assert(! Lib::StrStrRec(lapin,"toto"));
+	assert(Lib::StrStrRec("",""));
+	assert(!Lib::StrStrRec("","sapin"));
+
+	printf("\n========== OK============\n");
 }
 
 int main(){
