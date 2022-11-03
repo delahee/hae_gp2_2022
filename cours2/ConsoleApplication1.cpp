@@ -586,6 +586,18 @@ void testInt64(){
 		t2.removeAll(8);
 		t2.print();
 	}
+
+	cout << "\n sorting test \n";
+	{
+		Int64Array t2(1);
+		t2.push_back(9);
+		t2.push_back(66);
+		t2.push_back(9);
+		t2.push_back(77);
+		auto other = Int64Array::sort(t2);
+		t2.print();
+		other->print();
+	}
 }
 
 int main(){

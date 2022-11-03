@@ -34,6 +34,15 @@ public:
 		data[pos] = elem;
 	};
 
+	int64_t get_unsafe(int pos){
+		return data[pos];
+	}
+
+	int64_t get(int pos) {
+		if (pos < 0 || pos >= cursor) throw "out of bounds";
+		return data[pos];
+	}
+
 	void set(int pos, int64_t elem) {
 		if (pos < 0 || pos >= cursor) throw "out of bounds";
 		set_unsafe(pos, elem);
@@ -121,6 +130,52 @@ public:
 		if (!one)
 			return;
 		removeAll(elem);
+	};
+
+	protected:
+		int _searchOrderedPosition(int64_t elem, int start = 0) { //renvoyer la position d’insertion ou -1 si pas trouvé
+			if(start < 0)
+				return -1;
+			if (start >= cursor)
+				return cursor;
+			if (elem <= data[start])
+				return start;
+			return _searchOrderedPosition(elem, start + 1);
+		};
+
+		public:
+
+	int searchOrderedPos(int64_t elem){
+		return _searchOrderedPosition(elem);
+	}
+
+	void addElementsInASortedArray(int start, Int64Array& in) {
+		if (start >= size())
+			return;
+		///prendre le premier element
+		int64_t elem = get(start);
+		// trouver ou on devrait l'inserer de facon trié
+		int insertionPos = in.searchOrderedPos(elem);
+		if (insertionPos == -1)
+			return;
+		// inserer
+		in.insert(insertionPos, elem);
+		in.print();
+		addElementsInASortedArray(start + 1, in);
+	};
+
+	//returns a shallow array with ref content sorted
+	static Int64Array* sort(Int64Array& ref) {
+
+		//je m'alloue un tableau
+		if (ref.size() == 0)
+			return new Int64Array(1);
+		auto res = new Int64Array(ref.size());
+
+		//insert content of ref but in a sorted fashion
+		ref.addElementsInASortedArray(0, *res);
+
+		return res;
 	};
 
 
