@@ -141,8 +141,10 @@
   <ItemGroup>
     <ClCompile Include="ConsoleApplication1.cpp" />
     <ClCompile Include="FloatArray.cpp" />
+    <ClCompile Include="Int64Array.cpp" />
     <ClCompile Include="IntArray.cpp" />
     <ClCompile Include="IntTree.cpp" />
+    <ClCompile Include="Lib.cpp" />
     <ClCompile Include="LinkedListInt.cpp" />
     <ClCompile Include="StringTree.cpp" />
     <ClCompile Include="Vec.cpp" />

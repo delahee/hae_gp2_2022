@@ -229,4 +229,7 @@ public:
 		if (*a > *b) return 1;
 		return StrCmp(a + 1, b + 1);
 	}
+
+	static int rand();
+	
 };

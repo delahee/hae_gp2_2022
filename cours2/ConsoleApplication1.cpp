@@ -513,6 +513,79 @@ void testInt64(){
 	t1.push_front(3);
 	t1.push_front(4);
 	t1.print();
+
+	cout << "\n **** \n";
+
+
+	Int64Array t2(1);
+	t2.push_back(8);
+	t2.push_back(8);
+	t2.push_back(8);
+	t2.push_back(8);
+
+	t2.insert(2, 4);
+	t2.insert(4, 3);
+
+	cout << "searched " << t2.searchPosition(4) << endl;
+
+	t2.print();
+
+	cout << "\n **** \n";
+
+	Int64Array t3(1);
+	t3.fillWithRandom(16);
+	t3.print();
+
+
+	{
+		Int64Array t4(1);
+		t4.push_back(4);
+		t4.push_back(5);
+		t4.print();
+		t4.shift_left(1, t4.size());
+		t4.print();
+	}
+
+	{
+		Int64Array t4(1);
+		t4.push_back(3);
+		t4.print();
+		t4.shift_left(1, t4.size());
+		t4.print();
+	}
+
+	{
+		Int64Array t4(1);
+		t4.push_back(3);
+		t4.push_back(4);
+		t4.push_back(5);
+		t4.push_back(6);
+		t4.print();
+		t4.shift_left(0, t4.size());
+		t4.print();
+	}
+
+	{
+		Int64Array t5(1);
+		t5.push_back(3);
+		t5.push_back(4);
+		t5.push_back(5);
+		t5.print();
+		t5.removeOne(3);
+		t5.print();
+	}
+
+	{
+		Int64Array t2(1);
+		t2.push_back(8);
+		t2.push_back(8);
+		t2.push_back(8);
+		t2.push_back(8);
+
+		t2.print();
+		t2.removeAll(8);
+		t2.print();
+	}
 }
 
 int main(){
