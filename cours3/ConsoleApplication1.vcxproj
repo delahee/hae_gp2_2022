@@ -155,6 +155,7 @@
     <ClInclude Include="IntArray.hpp" />
     <ClInclude Include="IntTree.hpp" />
     <ClInclude Include="Lib.hpp" />
+    <ClInclude Include="LinkedList.hpp" />
     <ClInclude Include="LinkedListInt.hpp" />
     <ClInclude Include="StringTree.hpp" />
     <ClInclude Include="Vec.hpp" />

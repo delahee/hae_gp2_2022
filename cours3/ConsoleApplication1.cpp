@@ -16,6 +16,7 @@
 
 #include "Lib.hpp"
 #include "Int64Array.hpp"
+#include "LinkedList.hpp"
 
 using namespace std;
 
@@ -676,7 +677,26 @@ void testChrono() {
 	cout << "timing 1 compared to timing 0 = " << to_string(timing1 / timing0);
 }
 
+static void testTemplateList(){
+	IntList ti;
 
+	Node<int> toto(66);
+	Node<float> tata(66.0f);
+
+	FloatList tf;
+
+	int here = 0;
+
+	ti.print();
+	tf.print();
+
+	tf.push_front(33.5f);
+	tf.push_front(44.6f);
+	tf.print();
+	tf.removeOne(44.6f);
+	tf.print();
+
+}
 
 int main(){
 	clock_t init = clock();
@@ -692,6 +712,6 @@ int main(){
 	//testArith();
 	//testInt64();
 	//testChrono();
-	testBsearchRec();
-
+	//testBsearchRec();
+	testTemplateList();
 }
