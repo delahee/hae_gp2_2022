@@ -178,6 +178,27 @@ public:
 		return res;
 	};
 
+	void swap(int idx0, int idx1){
+		int64_t tmp = data[idx0];
+		data[idx0] = data[idx1];
+		data[idx1] = tmp;
+	}
+
+	static void insertionSort(Int64Array& t) {
+		for (int i = 1; i < t.size(); ++i) {
+			int j = i;
+			while ((j > 0) && (t.get(j) < t.get(j - 1))) {
+				t.swap(j, j - 1);
+				j--;
+			}
+			//t.print();
+		}
+	};
+
+	static void stdQsort(Int64Array& t) {
+		//qsort(data,)
+
+	}
 
 protected:
 	//shift ?

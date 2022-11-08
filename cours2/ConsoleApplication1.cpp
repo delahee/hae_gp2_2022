@@ -598,7 +598,47 @@ void testInt64(){
 		t2.print();
 		other->print();
 	}
+
+	cout << "\n sorting test algo \n";
+	{
+		Int64Array t2(1);
+		t2.push_back(5);
+		t2.push_back(4);
+		t2.push_back(3);
+		t2.push_back(2);
+		t2.push_back(1);
+
+		Int64Array::insertionSort(t2);
+		t2.print();
+	}
 }
+
+void testChrono() {
+	auto t0 = Lib::getTimestamp();
+	//for malloc(1)
+	//2.5	00 000 0.31
+	//5000 000 0.62
+
+	//for sort
+	//1024 0.099595s
+	//2048 0.190546s
+	//4096 0.280546s
+	//9192 0.95000s
+	Int64Array t2(1);
+	t2.fillWithRandom(4096*2);
+	Int64Array::insertionSort(t2);
+	t2.print();
+
+	Int64Array t3(1);
+	t3.fillWithRandom(4096 * 2);
+	Int64Array::stdQsort(t2);
+	t3.print();
+
+	auto t1 = Lib::getTimestamp();
+	cout << to_string(t1 - t0) << "s \n";
+}
+
+
 
 int main(){
 	clock_t init = clock();
@@ -612,5 +652,7 @@ int main(){
 	//testStringTree();
 	//testLib();
 	//testArith();
-	testInt64();
+	//testInt64();
+	testChrono();
+
 }

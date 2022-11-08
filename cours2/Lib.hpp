@@ -1,5 +1,9 @@
 #pragma once
 
+#include <chrono>
+#include <ctime>
+
+
 class Lib{
 public:
 	static void Memcpy(char* dest, const char* src, int size) {
@@ -231,5 +235,11 @@ public:
 	}
 
 	static int rand();
+
+	static double getTimestamp() {
+		std::chrono::nanoseconds ns =
+			std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::system_clock::now().time_since_epoch());
+		return ns.count() / 1000000000.0;
+	};
 	
 };
