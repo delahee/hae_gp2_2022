@@ -589,7 +589,7 @@ void testInt64(){
 		t2.print();
 	}
 
-	cout << "\n sorting test \n";
+	cout << "\n sorting tevst \n";
 	{
 		Int64Array t2(1);
 		t2.push_back(9);
@@ -678,7 +678,7 @@ void testChrono() {
 	cout << "timing 1 compared to timing 0 = " << to_string(timing1 / timing0);
 }
 
-static void testTemplateList(){
+static void testTemplateList() {
 	{
 		IntList ti;
 
@@ -728,6 +728,25 @@ static void testTemplateList(){
 	ts.insert("b");
 	ts.print();
 
+	auto res = ts.search("a");
+	if (res)
+		cout << "found";
+
+	cout << "\n remove test \n";
+
+
+	BinaryTreeController<int> big;
+
+	for (int i = 0; i < 150; ++i)
+		big.insert(i);
+	cout << std::to_string(big.size()) << "\n";
+
+	for (int i = 0; i < 150; ++i)
+		big.remove(i);
+
+	cout << std::to_string(big.size())<<"\n";
+	if (big.size() != 0)
+		throw "assert";
 }
 
 int main(){

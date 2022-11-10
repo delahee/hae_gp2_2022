@@ -1,9 +1,11 @@
 #pragma once
 
+#include <string>
+
 template<typename Type>
 class BinaryTree{
 public:
-	Type		key;
+	Type		key = {};
 	BinaryTree* left = nullptr;
 	BinaryTree* right = nullptr;
 
@@ -12,7 +14,67 @@ public:
 	}
 
 	void print();
+
+	int size() {
+		int sz = 1;
+		if (left)
+			sz += left->size();
+		if (right)
+			sz += right->size();
+		return sz;
+	};
 	
+	BinaryTree* remove(Type val) {
+		auto tLeft = left;
+		auto tRight = right;
+		if(key == val){
+			delete this;
+			if (!tLeft && !tRight)
+				return nullptr;
+			else if (!tLeft)
+				return tRight;
+			else if(!tRight)
+				return tLeft;
+			else {
+				while(tLeft){
+					auto tKey = tLeft->key;
+					tRight = tRight->insert(tKey);
+					tLeft = tLeft->remove(tKey);
+				}
+				return tRight;
+			}
+		}
+		else {
+			if (val < key) {
+				if (left)
+					left = left->remove(val);
+			}
+			else {
+				if (right)
+					right = right->remove(val);
+			}
+			return this;
+		}
+	};
+
+	BinaryTree* search(Type val) {
+		if( val == key ){
+			return this;
+		}
+		else if( val < key){
+			if (!left)
+				return nullptr;
+			else
+				return left->search(val);
+		}
+		else {
+			if (!right)
+				return nullptr;
+			else
+				return right->search(val);
+		}
+	};
+
 	BinaryTree* insert(Type val) {
 		if( val < key ){
 			if( left )
@@ -64,6 +126,11 @@ public:
 			trunk = new BinaryTree<Type>(key);
 	};
 
+	int size() {
+		if (!trunk) return 0;
+		else return trunk->size();
+	};
+
 	void print(){
 		if (trunk) {
 			trunk->print();
@@ -71,4 +138,18 @@ public:
 		else
 			std::cout << " [] ";
 	}
+
+	void remove(Type val) {
+		if (!trunk)
+			return;
+		else
+			trunk = trunk->remove(val);
+	}
+	
+	BinaryTree<Type>* search(Type val) {
+		if (!trunk)
+			return {};
+		else
+			trunk = trunk->search(val);
+	};
 };
