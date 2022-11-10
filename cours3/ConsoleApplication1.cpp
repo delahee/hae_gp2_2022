@@ -17,6 +17,7 @@
 #include "Lib.hpp"
 #include "Int64Array.hpp"
 #include "LinkedList.hpp"
+#include "BinaryTree.hpp"
 
 using namespace std;
 
@@ -678,23 +679,54 @@ void testChrono() {
 }
 
 static void testTemplateList(){
-	IntList ti;
+	{
+		IntList ti;
 
-	Node<int> toto(66);
-	Node<float> tata(66.0f);
+		Node<int> toto(66);
+		Node<float> tata(66.0f);
 
-	FloatList tf;
+		FloatList tf;
 
-	int here = 0;
+		int here = 0;
 
+		ti.print();
+		tf.print();
+
+		tf.push_front(33.5f);
+		tf.push_front(44.6f);
+		tf.print();
+		tf.removeOne(44.6f);
+		tf.removeOne(99);
+		tf.print();
+
+		tf.push_back(66.6f);
+		tf.push_back(77.7f);
+		tf.print();
+	}
+	cout << "****\n";
+	BinaryTreeController<int> ti;
+	BinaryTreeController<std::string> ts;
+
+	BinaryTree<int> bti(66);
+	BinaryTree<std::string> bts("sapin");
+
+	bts.print();
+	bti.print();
+
+	//ti.insert(16);
+	//ts.insert("16");
 	ti.print();
-	tf.print();
+	ts.print();
 
-	tf.push_front(33.5f);
-	tf.push_front(44.6f);
-	tf.print();
-	tf.removeOne(44.6f);
-	tf.print();
+	ti.insert(12);
+	ti.insert(60);
+	ti.insert(6);
+	ti.print();
+
+	ts.insert("a");
+	ts.insert("e");
+	ts.insert("b");
+	ts.print();
 
 }
 

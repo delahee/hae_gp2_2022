@@ -35,6 +35,16 @@ struct Node{
 		}
 		return this;
 	};
+
+	Node<T>* push_back(T val) {
+		//succ ? je delegue
+		if (next)
+			next = next->push_back(val);
+		// pas de succ, j'insere la valeur
+		else
+			next = new Node<T>(val);
+		return this;
+	}
 };
 
 template< typename T>
@@ -51,6 +61,16 @@ public:
 		nuHead->next = head;
 		head = nuHead;
 	};
+
+
+	void push_back(T val) {
+		if (!head) {
+			head = new Node<T>(val);
+			return;
+		}
+		head = head->push_back(val);
+	}
+
 
 	void removeAll(T val) {
 		if (!head)

@@ -150,6 +150,7 @@
     <ClCompile Include="Vec.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BinaryTree.hpp" />
     <ClInclude Include="FloatArray.hpp" />
     <ClInclude Include="Int64Array.hpp" />
     <ClInclude Include="IntArray.hpp" />
