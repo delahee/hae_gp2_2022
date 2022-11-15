@@ -1,7 +1,9 @@
+#pragma once
+
 #include "SFML/System/Vector2.hpp"
 
 class Catmull{
-
+public:
 	static inline double polynom(
 		double p0,
 		double p1,

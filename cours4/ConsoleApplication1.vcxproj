@@ -157,6 +157,7 @@
   <ItemGroup>
     <ClInclude Include="Catmull.hpp" />
     <ClInclude Include="Lib.hpp" />
+    <ClInclude Include="Line.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
