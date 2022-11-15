@@ -613,29 +613,67 @@ void testInt64(){
 	}
 }
 
+static void testBsearchRec(){
+	Int64Array t(1);
+
+	t.push_back(10);
+	t.push_back(20);
+	t.push_back(30);
+	t.push_back(40);
+	t.push_back(60);
+	t.push_back(100);
+	int here = t.bsearchRec(35,0,t.size()-1);
+
+	int sz = 512 * 1;
+	Int64Array t2(sz);
+	t2.fillWithRandom(sz);
+	t2.stdQsort();
+	int nbFound0 = 0;
+	auto st0 = Lib::getTimestamp();
+	for (int i = 0; i < 65535; ++i) {
+		int fnd = t2.linearSearch(Lib::rand(), 0, t2.size());
+		if (fnd == -1)
+			nbFound0++;
+	}
+	auto st1 = Lib::getTimestamp();
+	cout << to_string(st1 - st0) << "s \n" << to_string(nbFound0) << "\n";
+
+	int nbFound1 = 0;
+	Int64Array t3(sz);
+	t3.fillWithRandom(sz);
+	t3.stdQsort();
+	auto st20 = Lib::getTimestamp();
+	for (int i = 0; i < 65535; ++i) {
+		int fnd = t3.bsearchRec(Lib::rand(), 0, t3.size() - 1);
+		if (fnd == -1)
+			nbFound1++;
+	}
+	auto st2 = Lib::getTimestamp();
+	cout << to_string(st2 - st20) << "s \n" << to_string(nbFound1) << "\n";
+	int end = 0;
+}
+
 void testChrono() {
-	auto t0 = Lib::getTimestamp();
-	//for malloc(1)
-	//2.5	00 000 0.31
-	//5000 000 0.62
-
-	//for sort
-	//1024 0.099595s
-	//2048 0.190546s
-	//4096 0.280546s
-	//9192 0.95000s
-	Int64Array t2(1);
-	t2.fillWithRandom(4096*2);
+	auto st0 = Lib::getTimestamp();
+	
+	int sz = 256;
+	Int64Array t2(sz);
+	t2.fillWithRandom(sz);
 	Int64Array::insertionSort(t2);
-	t2.print();
+	auto st1 = Lib::getTimestamp();
+	cout << to_string(st1 - st0) << "s \n";
 
-	Int64Array t3(1);
-	t3.fillWithRandom(4096 * 2);
-	Int64Array::stdQsort(t2);
-	t3.print();
+	auto st20 = Lib::getTimestamp();
+	Int64Array t3(sz);
+	t3.fillWithRandom(sz);
+	t3.stdQsort();
+	auto st2 = Lib::getTimestamp();
+	cout << to_string(st2 - st20) << "s \n";
 
-	auto t1 = Lib::getTimestamp();
-	cout << to_string(t1 - t0) << "s \n";
+	auto timing0 = (st1 - st0);
+	auto timing1 = (st2 - st20);
+
+	cout << "timing 1 compared to timing 0 = " << to_string(timing1 / timing0);
 }
 
 
@@ -653,6 +691,7 @@ int main(){
 	//testLib();
 	//testArith();
 	//testInt64();
-	testChrono();
+	//testChrono();
+	testBsearchRec();
 
 }

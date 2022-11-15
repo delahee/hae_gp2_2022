@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <cstdlib>
 #include "Lib.hpp"
+#include <corecrt_search.h>
 
 class Int64Array{
 public:
@@ -14,7 +15,8 @@ public:
 		if (_allocSize <= 0)
 			_allocSize = 16;
 		data = (int64_t*) malloc(_allocSize * sizeof(int64_t));
-		setZero(0, _allocSize);
+		//setZero(0, _allocSize);
+		memset(data, 0, _allocSize * sizeof(int64_t));
 		cursor = 0;
 		allocSize = _allocSize;
 	};
@@ -195,10 +197,42 @@ public:
 		}
 	};
 
-	static void stdQsort(Int64Array& t) {
-		//qsort(data,)
+	static int compare( const void* a0, const void* a1) {
+		int64_t a640 = *((int64_t*)(a0));
+		int64_t a641 = *((int64_t*)(a1));
+		if (a641 < a640)
+			return 1;
+		else  if (a641 > a640)
+			return -1;
+		else return 0;
+	};
 
-	}
+	void stdQsort() {
+		qsort(data, size(), sizeof(int64_t), compare);
+	};
+
+	int bsearchRec( int64_t key, int start, int end/*inclus*/ ) {
+		if (start > end)
+			return -1;
+		if (data[start] == key)
+			return  start;
+		if (data[end] == key)
+			return  end;
+		int mid = (start + end) >> 1;
+		if (data[mid] == key)
+			return mid;
+		if(data[mid] > key)
+			return bsearchRec(key,start + 1, mid - 1);
+		else 
+			return bsearchRec(key, mid + 1, end);
+	};
+	
+	int linearSearch( int64_t key, int start, int end/*inclus*/ ) {
+		for(int i = start; i < end;++i)
+			if (data[i] == key)
+				return i;
+		return -1;
+	};
 
 protected:
 	//shift ?
