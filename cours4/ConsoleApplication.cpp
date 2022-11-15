@@ -62,6 +62,7 @@ void testSFML(){
 	sf::RectangleShape& tPoint = catmullPoints.back();
 	tPoint.setFillColor(sf::Color(0xC130FAff));
 
+	Line l;
 	while (window.isOpen()) { // ONE FRAME
 
 		sf::Event event;
@@ -119,6 +120,8 @@ void testSFML(){
 		window.draw(ground);
 		window.draw(sight);
 		window.draw(rect);
+
+		l.draw(window);
 
 		for( auto& cp : catmullPoints)
 			window.draw(cp);
