@@ -63,6 +63,14 @@ void testSFML(){
 	tPoint.setFillColor(sf::Color(0xC130FAff));
 
 	Line l;
+
+	std::vector<sf::Vector2f> p;
+	p.push_back(sf::Vector2f(400, 100));
+	p.push_back(sf::Vector2f(350, 250));
+	p.push_back(sf::Vector2f(400, 400));
+	p.push_back(sf::Vector2f(350, 450));
+	l.setPoints(p);
+
 	while (window.isOpen()) { // ONE FRAME
 
 		sf::Event event;
