@@ -34,7 +34,23 @@ public:
 	void draw(sf::RenderWindow& win) {
 		sf::VertexArray vb(sf::LineStrip);
 		for (auto& b : baked) {
-			sf::Vertex vtx(b, sf::Color::Cyan);
+
+			sf::Color c;
+			if (b.y < heightMinMax[0])
+				c = colorMinMax[0];
+			else if (b.y >= heightMinMax[1])
+				c = colorMinMax[1];
+			else {
+				float t = (b.y - heightMinMax[0]) / (heightMinMax[1] - heightMinMax[0]);
+				c = sf::Color( 
+					Lib::lerp(colorMinMax[0].r, colorMinMax[1].r,t),
+					Lib::lerp(colorMinMax[0].g, colorMinMax[1].g,t),
+					Lib::lerp(colorMinMax[0].b, colorMinMax[1].b,t)
+				);
+			}
+
+			sf::Vertex vtx(b, c);
+
 			vb.append(vtx);//tout mes vertex;
 		}
 		
@@ -82,6 +98,9 @@ public:
 		}
 	};
 
+
+	sf::Color colorMinMax[2] = { sf::Color::White , sf::Color::White };
+	float heightMinMax[2] = {150,300};
 	
 
 	sf::Vector2f interpolateCatmull(float t) {

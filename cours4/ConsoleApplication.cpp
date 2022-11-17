@@ -99,16 +99,24 @@ void testSFML(){
 		auto nl = mountains.back();
 		nl.translate(sf::Vector2f(0, 2 + Lib::randF()* 7));
 		for (auto& o : nl.origins) {
-			if (o.y < mntGround)
-				o.y += (mntGround - o.y) * (0.15f + Lib::randF() * 0.005f);
+			if (o.y < mntGround) {
+				float diff = (mntGround - o.y) * (0.15f + Lib::randF() * 0.005f);
+				o.y += diff;
+			}
 			o.x += -10 + Lib::rand() % 20;
 			if( Lib::rand() % 50 == 4 )
 				o.y += 3 + Lib::rand() % 30;
 			if (Lib::rand() % 1000 == 4)
-				o.y -= Lib::randF() * 10;
+				o.y -= Lib::randF() * 20;
 		}
+		nl.heightMinMax[1] += 5 + Lib::randF() * 8;
 		nl.rebake();
 		mountains.push_back(nl);
+	}
+
+	for(auto & l : mountains) {
+		l.colorMinMax[0] = sf::Color(0xE6EEDEff);
+		l.colorMinMax[1] = sf::Color(0x913F00ff);
 	}
 
 	while (window.isOpen()) { // ONE FRAME
