@@ -9,6 +9,9 @@ int Lib::rand(){
 		srand(now);
 		isInit = true;
 	}
-	
 	return ::rand();
+}
+
+float Lib::randF() {
+	return 1.0f * Lib::rand() / RAND_MAX;
 }

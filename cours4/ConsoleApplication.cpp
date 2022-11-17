@@ -87,13 +87,29 @@ void testSFML(){
 	std::vector<sf::Vector2f> p;
 	std::vector<Line> mountains;
 
+	int mntGround = 300;
 	Line l0;
 	std::vector<sf::Vector2f> vec = {
-		sf::Vector2f(0,300), sf::Vector2f(GAME_WIDTH * 0.25,300), sf::Vector2f(GAME_WIDTH * 0.32, 180),sf::Vector2f(GAME_WIDTH * 0.40,50), sf::Vector2f(GAME_WIDTH * 0.65,300),sf::Vector2f(GAME_WIDTH,90),
+		sf::Vector2f(-100,300), sf::Vector2f(GAME_WIDTH * 0.25,300), sf::Vector2f(GAME_WIDTH * 0.32, 180),sf::Vector2f(GAME_WIDTH * 0.40,50), sf::Vector2f(GAME_WIDTH * 0.65,300),sf::Vector2f(GAME_WIDTH,180),
 	};
 	l0.setPoints(vec);
-	l0.enableControlPointsDisplay = true;
 	mountains.push_back(l0);
+
+	for( int i = 0; i < 40; ++i){
+		auto nl = mountains.back();
+		nl.translate(sf::Vector2f(0, 2 + Lib::randF()* 7));
+		for (auto& o : nl.origins) {
+			if (o.y < mntGround)
+				o.y += (mntGround - o.y) * (0.15f + Lib::randF() * 0.005f);
+			o.x += -10 + Lib::rand() % 20;
+			if( Lib::rand() % 50 == 4 )
+				o.y += 3 + Lib::rand() % 30;
+			if (Lib::rand() % 1000 == 4)
+				o.y -= Lib::randF() * 10;
+		}
+		nl.rebake();
+		mountains.push_back(nl);
+	}
 
 	while (window.isOpen()) { // ONE FRAME
 

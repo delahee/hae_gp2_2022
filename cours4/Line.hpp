@@ -7,7 +7,11 @@ class Line {
 public:
 	std::vector<sf::Vector2f> origins;
 	std::vector<sf::Vector2f> baked;
+	
 	bool enableControlPointsDisplay = false;
+
+
+
 	Line(){
 		baked.push_back(sf::Vector2f(200, 200));
 		baked.push_back(sf::Vector2f(300, 250));
@@ -15,6 +19,17 @@ public:
 		baked.push_back(sf::Vector2f(500, 200));
 	}
 
+	void translate(sf::Vector2f tr) {
+		for (auto& t : origins)
+			t += tr;
+		std::vector<sf::Vector2f> nu = (origins);
+		setPoints(nu);
+	};
+
+	void rebake(){
+		std::vector<sf::Vector2f> nu = (origins);
+		setPoints(nu);
+	}
 
 	void draw(sf::RenderWindow& win) {
 		sf::VertexArray vb(sf::LineStrip);
