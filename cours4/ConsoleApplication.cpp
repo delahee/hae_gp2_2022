@@ -16,6 +16,30 @@ static sf::RectangleShape ground(sf::Vector2f(GAME_WIDTH,2));
 static sf::RectangleShape rect(sf::Vector2f(64,16));
 static std::vector<sf::RectangleShape> catmullPoints;
 static sf::VertexArray sight(sf::PrimitiveType::Lines);
+static Line l;
+
+struct Bullet {
+	sf::CircleShape		shp;
+	float				t = 0.0f;
+
+	Bullet(){
+		shp = sf::CircleShape(16);
+		shp.setOrigin(16,16);
+		shp.setFillColor(sf::Color(0xF29027ff));
+		shp.setOutlineColor(sf::Color(0xF33313ff));
+		shp.setOutlineThickness(2);
+		t = 0.0f;
+	}
+
+
+	void update() {
+		sf::Vector2f pos = l.interpolateCatmull(t);
+		shp.setPosition(pos);
+		t += 0.01;
+	};
+};
+
+static std::vector<Bullet> bullets;
 
 static int CANNON_ROTATION = -45;
 void testSFML(){
@@ -56,13 +80,10 @@ void testSFML(){
 	plot(sf::Vector2f(50, 200));
 	plot(sf::Vector2f(200, 300));
 	plot(sf::Vector2f(300, 300));
-
 	plot(sf::Vector2f(0, 0));
 
 	sf::RectangleShape& tPoint = catmullPoints.back();
 	tPoint.setFillColor(sf::Color(0xC130FAff));
-
-	Line l;
 
 	std::vector<sf::Vector2f> p;
 
@@ -72,6 +93,10 @@ void testSFML(){
 		while (window.pollEvent(event)) { // ONE EVENT
 			if (event.type == sf::Event::Closed)
 				window.close();
+			if (event.type == sf::Event::KeyReleased){
+				if(event.key.code == sf::Keyboard::Space)
+					bullets.push_back(Bullet());
+			}
 		}
 
 		float speed = 3.0f;
@@ -103,10 +128,24 @@ void testSFML(){
 		p.clear();
 
 		auto cannonPos = rect.getPosition();
-		p.push_back( cannonPos);
-		p.push_back( sf::Vector2f(cannonPos.x * 0.5 + SIGHT_TARGET * GAME_WIDTH * 0.5f, GROUND_Y - 200));
+		p.push_back( cannonPos );
+
+		sf::Vector2f midPoint = sf::Vector2f(cannonPos.x * 0.5 + SIGHT_TARGET * GAME_WIDTH * 0.5f, GROUND_Y - 200);
+		p.push_back(midPoint);
 		p.push_back(sf::Vector2f(sf::Vector2f(SIGHT_TARGET * GAME_WIDTH, GROUND_Y)));
 		l.setPoints(p);
+
+		sf::Vector2f dir = midPoint - cannonPos;
+		double len = sqrt(dir.x * dir.x + dir.y * dir.y);
+		if(len>0){
+			dir.x /= len;
+			dir.y /= len;
+		}
+		double angle = atan2(dir.y, dir.x);
+		double angleDeg = angle / (2.0 * 3.14159) * 360;
+		CANNON_ROTATION = angleDeg;
+
+		rect.setRotation(CANNON_ROTATION);
 
 		auto cannonVtx = sf::Vertex(rect.getPosition());
 		cannonVtx.color = sf::Color::Red;
@@ -123,13 +162,17 @@ void testSFML(){
 		destVertex.color = sf::Color::Red;
 		sight.append(destVertex);
 
+		for (auto& b : bullets)
+			b.update();
 		//
 		window.clear();
 		window.draw(ground);
 		window.draw(sight);
 		window.draw(rect);
 
-		l.draw(window);
+		for (auto& b : bullets)
+			window.draw(b.shp);
+		//l.draw(window);
 
 		
 		window.display();

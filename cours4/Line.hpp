@@ -5,6 +5,7 @@
 
 class Line {
 public:
+	std::vector<sf::Vector2f> origins;
 	std::vector<sf::Vector2f> baked;
 
 	Line(){
@@ -23,12 +24,14 @@ public:
 		win.draw(vb);
 	};
 
+	sf::Vector2f get(int idx) {
+		if (idx < 0) idx = 0;
+		if (idx >= origins.size())idx = origins.size() - 1;
+		return origins[idx];
+	};
+
 	void setPoints(std::vector<sf::Vector2f>& p, float tstep = 0.1f) {
-		auto get = [&p](int idx) {
-			if (idx < 0) idx = 0;
-			if (idx >= p.size())idx = p.size() - 1;
-			return p[idx];
-		};
+		origins = p;
 		baked.clear();
 		int steps = std::round(1.0f / tstep);
 		double cstep = 0.0;
@@ -48,5 +51,24 @@ public:
 					break;
 			}
 		}
+	};
+
+	// 0 - 1 t 
+	// 0 n nb point bake
+	// interpol lineairement entre les deux pos
+
+	sf::Vector2f interpolateCatmull(float t) {
+		// 0 1 => sur toute la  courbe
+		// 0 n ( n = nombre de point
+		// 2.5 
+		// => interpoler entre 2 et 3 avec un t de 0.5
+		float globalT = t * origins.size();
+		int i = (int)globalT;
+		float localT = globalT - i;
+		auto p0 = get(i - 1);
+		auto p1 = get(i);
+		auto p2 = get(i + 1);
+		auto p3 = get(i + 2);
+		return Catmull::polynom2(p0, p1, p2, p3, localT);
 	};
 };
