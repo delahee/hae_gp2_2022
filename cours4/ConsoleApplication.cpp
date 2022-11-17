@@ -85,6 +85,15 @@ void testSFML(){
 	tPoint.setFillColor(sf::Color(0xC130FAff));
 
 	std::vector<sf::Vector2f> p;
+	std::vector<Line> mountains;
+
+	Line l0;
+	std::vector<sf::Vector2f> vec = {
+		sf::Vector2f(0,300), sf::Vector2f(GAME_WIDTH * 0.25,300), sf::Vector2f(GAME_WIDTH * 0.32, 180),sf::Vector2f(GAME_WIDTH * 0.40,50), sf::Vector2f(GAME_WIDTH * 0.65,300),sf::Vector2f(GAME_WIDTH,90),
+	};
+	l0.setPoints(vec);
+	l0.enableControlPointsDisplay = true;
+	mountains.push_back(l0);
 
 	while (window.isOpen()) { // ONE FRAME
 
@@ -161,13 +170,20 @@ void testSFML(){
 		destVertex.color = sf::Color::Red;
 		sight.append(destVertex);
 
-		for (auto& b : bullets)
-			b.update();
+		
+	
 		//
 		window.clear();
+
+		for (auto& b : mountains)
+			b.draw(window);
+
 		window.draw(ground);
 		window.draw(sight);
 		window.draw(rect);
+
+		for (auto& b : bullets)
+			b.update();
 
 		for (auto& b : bullets)
 			window.draw(b.shp);

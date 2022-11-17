@@ -7,7 +7,7 @@ class Line {
 public:
 	std::vector<sf::Vector2f> origins;
 	std::vector<sf::Vector2f> baked;
-
+	bool enableControlPointsDisplay = false;
 	Line(){
 		baked.push_back(sf::Vector2f(200, 200));
 		baked.push_back(sf::Vector2f(300, 250));
@@ -15,13 +15,27 @@ public:
 		baked.push_back(sf::Vector2f(500, 200));
 	}
 
+
 	void draw(sf::RenderWindow& win) {
 		sf::VertexArray vb(sf::LineStrip);
 		for (auto& b : baked) {
 			sf::Vertex vtx(b, sf::Color::Cyan);
 			vb.append(vtx);//tout mes vertex;
 		}
+		
 		win.draw(vb);
+
+		if (enableControlPointsDisplay) {
+			for (auto& b : origins) {
+				sf::CircleShape ctrl(8);
+				ctrl.setOrigin(8, 8);
+				ctrl.setPosition(b);
+				ctrl.setFillColor(sf::Color(0xFF4CE7ff));
+				ctrl.setOutlineColor(sf::Color(0x8AFE2Bff));
+				ctrl.setOutlineThickness(2);
+				win.draw(ctrl);
+			}
+		}
 	};
 
 	sf::Vector2f get(int idx) {
