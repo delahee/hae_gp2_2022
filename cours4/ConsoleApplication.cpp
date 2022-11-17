@@ -8,10 +8,10 @@
 #include "Catmull.hpp"
 #include "Line.hpp"
 
-static int GAME_WIDTH = 720;
-static int GAME_HEIGHT = 480;
-static int GROUND_Y = 400;
-static double catmullT = 0.5f;
+static int GAME_WIDTH = 1600;
+static int GAME_HEIGHT = 900;
+static int GROUND_Y = 700;
+static float SIGHT_TARGET = 0.5f;
 static sf::RectangleShape ground(sf::Vector2f(GAME_WIDTH,2));
 static sf::RectangleShape rect(sf::Vector2f(64,16));
 static std::vector<sf::RectangleShape> catmullPoints;
@@ -65,11 +65,6 @@ void testSFML(){
 	Line l;
 
 	std::vector<sf::Vector2f> p;
-	p.push_back(sf::Vector2f(400, 100));
-	p.push_back(sf::Vector2f(350, 250));
-	p.push_back(sf::Vector2f(400, 400));
-	p.push_back(sf::Vector2f(350, 450));
-	l.setPoints(p);
 
 	while (window.isOpen()) { // ONE FRAME
 
@@ -79,49 +74,54 @@ void testSFML(){
 				window.close();
 		}
 
-		/*
-		if( sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
-			CANNON_ROTATION--;
-			rect.setRotation(CANNON_ROTATION);
-		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-			CANNON_ROTATION++;
-			rect.setRotation(CANNON_ROTATION);
-		}*/
-
-
+		float speed = 3.0f;
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-			catmullT -= 0.01f;
-			if (catmullT < 0)
-				catmullT = 0;
+			auto cannonPos = rect.getPosition();
+			cannonPos.x-=speed;
+			if (cannonPos.x < 0 )
+				cannonPos.x = 0;
+			rect.setPosition(cannonPos);
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-			catmullT += 0.01f;
-			if (catmullT > 1)
-				catmullT = 1;
-		}
+			auto cannonPos = rect.getPosition();
+			cannonPos.x+=speed;
+			if (cannonPos.x > GAME_WIDTH)
+				cannonPos.x = GAME_WIDTH;
+			rect.setPosition(cannonPos);
 
-		auto cannonPos = sf::Vertex(rect.getPosition());
-		cannonPos.color = sf::Color::Red;
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+			SIGHT_TARGET -= 0.01f;
+			if (SIGHT_TARGET < 0)
+				SIGHT_TARGET = 0;
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+			SIGHT_TARGET += 0.01f;
+			if (SIGHT_TARGET > 1)
+				SIGHT_TARGET = 1;
+		}
+		p.clear();
+
+		auto cannonPos = rect.getPosition();
+		p.push_back( cannonPos);
+		p.push_back( sf::Vector2f(cannonPos.x * 0.5 + SIGHT_TARGET * GAME_WIDTH * 0.5f, GROUND_Y - 200));
+		p.push_back(sf::Vector2f(sf::Vector2f(SIGHT_TARGET * GAME_WIDTH, GROUND_Y)));
+		l.setPoints(p);
+
+		auto cannonVtx = sf::Vertex(rect.getPosition());
+		cannonVtx.color = sf::Color::Red;
 
 		//draw sight
 		sight.clear();
-		sight.append(cannonPos);
+		sight.append(cannonVtx);
 
 		sf::Transform t;
 		auto tFinal = t.rotate(CANNON_ROTATION);
 		auto dest = tFinal.transformPoint(sf::Vector2f(128,0));
 		auto destVertex = sf::Vertex(dest);
-		destVertex.position += cannonPos.position;
+		destVertex.position += cannonVtx.position;
 		destVertex.color = sf::Color::Red;
 		sight.append(destVertex);
-
-		sf::Vector2f calc = Catmull::polynom2( 
-			catmullPoints[0].getPosition(),
-			catmullPoints[1].getPosition(),
-			catmullPoints[2].getPosition(),
-			catmullPoints[3].getPosition(),catmullT);
-		tPoint.setPosition(calc);
 
 		//
 		window.clear();
@@ -131,8 +131,6 @@ void testSFML(){
 
 		l.draw(window);
 
-		for( auto& cp : catmullPoints)
-			window.draw(cp);
 		
 		window.display();
 	}

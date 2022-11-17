@@ -30,18 +30,22 @@ public:
 			return p[idx];
 		};
 		baked.clear();
-		int steps = std::ceil(1.0f / tstep);
+		int steps = std::round(1.0f / tstep);
 		double cstep = 0.0;
-		for (int i = 0; i < p.size()-1; ++i) {
+		for (int i = 0; i < p.size(); ++i) {
 			auto p0 = get(i - 1);
 			auto p1 = get(i);
 			auto p2 = get(i + 1);
 			auto p3 = get(i + 2);
 			cstep = 0.0;
 			//creer les vertex interpolées entre les courbes.
-			for(int i = 0; i < steps;++i){
+			while(cstep < 1.0f){
+				if (cstep >= 1.0f)
+					cstep = 1.0f;
 				baked.push_back(Catmull::polynom2(p0, p1, p2, p3, cstep));
 				cstep += tstep;
+				if (cstep > 1.0f)
+					break;
 			}
 		}
 	};
