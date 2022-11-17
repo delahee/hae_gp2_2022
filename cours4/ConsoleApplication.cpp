@@ -31,9 +31,8 @@ struct Bullet {
 		t = 0.0f;
 	}
 
-
 	void update() {
-		sf::Vector2f pos = l.interpolateCatmull(t);
+		sf::Vector2f pos = l.interpolateLinear(t*2);
 		shp.setPosition(pos);
 		t += 0.01;
 	};

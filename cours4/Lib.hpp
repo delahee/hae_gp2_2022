@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <ctime>
+#include "SFML/System/Vector2.hpp"
 
 
 class Lib{
@@ -235,6 +236,17 @@ public:
 	}
 
 	static int rand();
+
+	static float lerp(float a, float b, float t) {
+		return a + (b - a) * t;
+	};
+
+	static sf::Vector2f lerp(sf::Vector2f a, sf::Vector2f b, float t) {
+		sf::Vector2f diff = b - a;
+		diff.x *= t;
+		diff.y *= t;
+		return a + diff;
+	};
 
 	static double getTimestamp() {
 		std::chrono::nanoseconds ns =

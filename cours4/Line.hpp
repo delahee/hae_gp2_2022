@@ -53,9 +53,7 @@ public:
 		}
 	};
 
-	// 0 - 1 t 
-	// 0 n nb point bake
-	// interpol lineairement entre les deux pos
+	
 
 	sf::Vector2f interpolateCatmull(float t) {
 		// 0 1 => sur toute la  courbe
@@ -71,4 +69,23 @@ public:
 		auto p3 = get(i + 2);
 		return Catmull::polynom2(p0, p1, p2, p3, localT);
 	};
+	
+	sf::Vector2f interpolateLinear(float t) {
+		// t compris 0 - 1 
+		// 0 n nb point baked
+		// interpole lineairement entre les deux pos bake avant et apres 
+		//
+		float globalT = t * (baked.size()-1);
+		int i = (int)globalT;//partie entiere entre 0 et n
+		float localT = globalT - i;// partie fractionnelle
+		if (t >= 1.0f)
+			return baked.back();
+		if (localT <= 0)
+			return baked[i];
+		if (localT >= 1)
+			return baked[i+1];
+		return Lib::lerp(baked[i], baked[i + 1], localT);
+	}
+
+
 };
