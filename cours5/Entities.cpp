@@ -51,3 +51,10 @@ void Ball::update() {
 		shp->setPosition(shp->getPosition() + speed);
 	}
 }
+
+Wall::Wall(sf::FloatRect r) : Entity(sf::Vector2f(r.left, r.top),new sf::RectangleShape(sf::Vector2f(r.width,r.height))) {
+	auto rect = (sf::RectangleShape*)shp;
+	rect->setFillColor(sf::Color::Red);
+	rect->setOutlineColor(sf::Color::Green);
+	rect->setOutlineThickness(2);
+}

@@ -13,11 +13,21 @@ public:
 	inline auto getLocalBounds() const {
 		return shp->getLocalBounds();
 	};
+	
+	inline auto getGlobalBounds() const {
+		return shp->getGlobalBounds();
+	};
 	inline auto getPosition() const {
 		return shp->getPosition();
 	};
+	
+	inline void setPosition(const sf::Vector2f& v) {
+		shp->setPosition(v);
+	};
 
 	void draw(sf::RenderWindow& win);
+
+	virtual void hit() {};
 };
 
 class Pad : public Entity {
@@ -39,4 +49,10 @@ public:
 	Ball(Pad * p);
 
 	void update();
+};
+
+
+class Wall : public Entity {
+public:
+	Wall(sf::FloatRect r);
 };

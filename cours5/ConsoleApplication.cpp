@@ -9,8 +9,10 @@
 #include "Line.hpp"
 #include "Entities.hpp"
 #include "Game.hpp"
+#include "World.hpp"
 
 
+static World world;
 static Pad * pad = nullptr;
 static Ball * ball = nullptr;
 static int GROUND_Y = 700;
@@ -32,6 +34,21 @@ void testSFML(){
 
 	pad = new Pad(sf::Vector2f(Game::WIDTH * 0.5f, GROUND_Y));
 	ball = new Ball(pad);
+
+	world.balls.push_back(ball);
+
+	//world.statics.push_back(pad);
+
+	auto wl = new Wall(sf::FloatRect(sf::Vector2f(-2, 0), sf::Vector2f(4, Game::HEIGHT)));
+	world.statics.push_back(wl); 
+	
+	auto wr = new Wall(sf::FloatRect(sf::Vector2f(-2 + Game::WIDTH, 0), sf::Vector2f(4, Game::HEIGHT)));
+	world.statics.push_back(wr);
+
+	auto wt = new Wall(sf::FloatRect( sf::Vector2f(-2 , -2), sf::Vector2f(Game::WIDTH + 4, 4)));
+	world.statics.push_back(wt);
+	//world.statics.push_back(pad);
+	//world.statics.push_back(pad);
 	
 	while (window.isOpen()) { // ONE FRAME
 
@@ -66,10 +83,14 @@ void testSFML(){
 		}
 		
 		ball->update();
+		world.update();
 	
 		window.clear();
 
 		window.draw(ground);
+		wl->draw(window);
+		wr->draw(window);
+		wt->draw(window);
 		pad->draw(window);
 		ball->draw(window);
 		window.display();
