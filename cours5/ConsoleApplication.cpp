@@ -47,8 +47,9 @@ void testSFML(){
 
 	auto wt = new Wall(sf::FloatRect( sf::Vector2f(-2 , -2), sf::Vector2f(Game::WIDTH + 4, 4)));
 	world.statics.push_back(wt);
-	//world.statics.push_back(pad);
-	//world.statics.push_back(pad);
+
+	auto br0 = new Brick( sf::FloatRect( sf::Vector2f(50,50), sf::Vector2f(32,8)));
+	world.statics.push_back(br0);
 	
 	while (window.isOpen()) { // ONE FRAME
 
@@ -88,10 +89,12 @@ void testSFML(){
 		window.clear();
 
 		window.draw(ground);
-		wl->draw(window);
-		wr->draw(window);
-		wt->draw(window);
+
+		for (auto st : world.statics)
+			st->draw(window);
+
 		pad->draw(window);
+		
 		ball->draw(window);
 		window.display();
 	}

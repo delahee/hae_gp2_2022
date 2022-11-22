@@ -3,6 +3,7 @@
 #include <chrono>
 #include <ctime>
 #include "SFML/System/Vector2.hpp"
+#include "SFML/Graphics/Color.hpp"
 
 
 class Lib{
@@ -267,4 +268,8 @@ public:
 		return false;
 	};
 
+	
+
 };
+
+#define SFML_ORANGE sf::Color(0xFC5C49ff)

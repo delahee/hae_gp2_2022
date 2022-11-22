@@ -5,7 +5,7 @@ void World::update() {
 			int		nbColls = 0;
 			Entity* collider = nullptr;
 
-			auto bb = b->getGlobalBounds();;
+			auto bb = b->getGlobalBounds();
 			for( auto c : statics){
 				if(c->getGlobalBounds().intersects(bb)){
 					collider = c;

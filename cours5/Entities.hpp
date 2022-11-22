@@ -56,3 +56,9 @@ class Wall : public Entity {
 public:
 	Wall(sf::FloatRect r);
 };
+
+class Brick : public Entity {
+public:
+	int hitPoint = 1;
+	Brick(sf::FloatRect r);
+};
