@@ -30,6 +30,9 @@ public:
 
 class Ball : public Entity{
 public:
+	sf::Vector2f speed;
+	sf::Vector2f lastPos;
+
 	Pad* hooked = nullptr;
 	int xOffset = 0;
 	int yOffset = 0;

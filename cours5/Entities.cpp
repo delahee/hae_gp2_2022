@@ -43,6 +43,11 @@ Ball::Ball(Pad * p) : Entity(sf::Vector2f(), new sf::CircleShape(12, 12)){
 }
 
 void Ball::update() {
+	lastPos = shp->getPosition();
+
 	if( hooked )
 		shp->setPosition(hooked->getPosition() + sf::Vector2f(xOffset,yOffset));
+	else {
+		shp->setPosition(shp->getPosition() + speed);
+	}
 }

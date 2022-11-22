@@ -40,7 +40,6 @@ void testSFML(){
 			if (event.type == sf::Event::Closed)
 				window.close();
 			if (event.type == sf::Event::KeyReleased){
-				
 			}
 		}
 
@@ -51,7 +50,18 @@ void testSFML(){
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
 			pad->moveRight();
 		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)
+			|| sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+			auto pad = ball->hooked;
+			if (pad) {
+				ball->hooked = nullptr;
+				auto dir = ball->getPosition() - pad->getPosition();
+				Lib::safeNormalize(dir);
+				float sp = 20.0f;
+				dir.x *= sp;
+				dir.y *= sp;
+				ball->speed = dir;
+			}
 
 		}
 		

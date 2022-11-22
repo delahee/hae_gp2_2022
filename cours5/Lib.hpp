@@ -254,5 +254,17 @@ public:
 			std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::system_clock::now().time_since_epoch());
 		return ns.count() / 1000000000.0;
 	};
-	
+
+
+	static bool safeNormalize(sf::Vector2f & inOut ) {
+		float distSq = inOut.x * inOut.x + inOut.y * inOut.y;
+		if( distSq ){
+			float dist = sqrtf(distSq);
+			inOut.x /= dist;
+			inOut.y /= dist;
+			return true;
+		}
+		return false;
+	};
+
 };
