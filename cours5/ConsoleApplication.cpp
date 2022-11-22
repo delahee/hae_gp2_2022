@@ -12,6 +12,7 @@
 
 
 static Pad * pad = nullptr;
+static Ball * ball = nullptr;
 static int GROUND_Y = 700;
 static float SIGHT_TARGET = 0.5f;
 static sf::RectangleShape ground(sf::Vector2f(Game::WIDTH,2));
@@ -30,6 +31,7 @@ void testSFML(){
 	
 
 	pad = new Pad(sf::Vector2f(Game::WIDTH * 0.5f, GROUND_Y));
+	ball = new Ball(pad);
 	
 	while (window.isOpen()) { // ONE FRAME
 
@@ -50,13 +52,16 @@ void testSFML(){
 			pad->moveRight();
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+
 		}
 		
+		ball->update();
 	
 		window.clear();
 
 		window.draw(ground);
 		pad->draw(window);
+		ball->draw(window);
 		window.display();
 	}
 }

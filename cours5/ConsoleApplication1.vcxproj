@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClCompile Include="ConsoleApplication.cpp" />
     <ClCompile Include="Entities.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="Lib.cpp" />
   </ItemGroup>
   <ItemGroup>

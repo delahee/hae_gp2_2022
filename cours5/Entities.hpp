@@ -2,7 +2,6 @@
 
 #include "SFML/Graphics/Shape.hpp"
 #include "SFML/Graphics/Rect.hpp"
-#include "SFML/Graphics/RectangleShape.hpp"
 #include "SFML/Graphics/RenderWindow.hpp"
 
 class Entity{
@@ -11,8 +10,11 @@ public:
 
 	Entity(sf::Vector2f pos, sf::Shape* shp);
 
-	auto getLocalBounds() const {
+	inline auto getLocalBounds() const {
 		return shp->getLocalBounds();
+	};
+	inline auto getPosition() const {
+		return shp->getPosition();
 	};
 
 	void draw(sf::RenderWindow& win);
@@ -24,4 +26,14 @@ public:
 
 	void moveLeft();
 	void moveRight();
+};
+
+class Ball : public Entity{
+public:
+	Pad* hooked = nullptr;
+	int xOffset = 0;
+	int yOffset = 0;
+	Ball(Pad * p);
+
+	void update();
 };
