@@ -34,13 +34,20 @@ void Pad::moveRight() {
 Ball::Ball(Pad * p) : Entity(sf::Vector2f(), new sf::CircleShape(12, 12)){
 	auto circ = (sf::RectangleShape*)shp;
 	circ->setOrigin(12, 12);
-	hooked = p;
-	xOffset = p->getLocalBounds().width * 0.1f;
-	yOffset =  - p->getLocalBounds().height * 0.5f;
+	initPos(p);
 
 	circ->setFillColor(sf::Color::Yellow);
 	circ->setOutlineColor(sf::Color::Blue);
 	circ->setOutlineThickness(2);
+}
+
+void Ball::initPos(Pad*hook){
+	auto p = hooked = hook;
+	if (hook) {
+		xOffset = p->getLocalBounds().width * 0.1f;
+		yOffset = -p->getLocalBounds().height * 1.0f;
+		speed = sf::Vector2f(0, 0);
+	}
 }
 
 void Ball::update() {
@@ -65,4 +72,9 @@ Brick::Brick(sf::FloatRect r) : Entity(sf::Vector2f(r.left, r.top), new sf::Rect
 	rect->setFillColor( SFML_ORANGE );
 	rect->setOutlineColor(sf::Color::Yellow);
 	rect->setOutlineThickness(2);
+}
+
+void Brick::hit() {
+	//remove brick from world
+	int here = 0;
 }

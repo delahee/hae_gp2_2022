@@ -48,6 +48,8 @@ public:
 	int yOffset = 0;
 	Ball(Pad * p);
 
+	void initPos(Pad* hook);
+
 	void update();
 };
 
@@ -61,4 +63,6 @@ class Brick : public Entity {
 public:
 	int hitPoint = 1;
 	Brick(sf::FloatRect r);
+
+	virtual void hit() override;
 };

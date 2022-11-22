@@ -37,7 +37,7 @@ void testSFML(){
 
 	world.balls.push_back(ball);
 
-	//world.statics.push_back(pad);
+	world.statics.push_back(pad);
 
 	auto wl = new Wall(sf::FloatRect(sf::Vector2f(-2, 0), sf::Vector2f(4, Game::HEIGHT)));
 	world.statics.push_back(wl); 
@@ -75,12 +75,11 @@ void testSFML(){
 				ball->hooked = nullptr;
 				auto dir = ball->getPosition() - pad->getPosition();
 				Lib::safeNormalize(dir);
-				float sp = 20.0f;
+				float sp = 15.0f;
 				dir.x *= sp;
 				dir.y *= sp;
 				ball->speed = dir;
 			}
-
 		}
 		
 		ball->update();
@@ -97,6 +96,10 @@ void testSFML(){
 		
 		ball->draw(window);
 		window.display();
+
+		if (ball->getPosition().y > Game::HEIGHT) {
+			ball->initPos(pad);
+		}
 	}
 }
 
