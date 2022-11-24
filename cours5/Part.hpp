@@ -7,12 +7,17 @@
 
 struct Part{
 	int					life = 0;
+	sf::Vector2f		speed;
 	sf::RectangleShape	shp = sf::RectangleShape(sf::Vector2f(4, 4));
 
 	Part();
+	Part(sf::Vector2f pos);
+
+	void update();
+	void draw(sf::RenderWindow& win);
 };
 
-class Parts{
+class PartController{
 public:
 	std::vector<Part> data;
 

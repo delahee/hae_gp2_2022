@@ -9,10 +9,12 @@
 #include "Line.hpp"
 #include "Entities.hpp"
 #include "Game.hpp"
+#include "Part.hpp"
 #include "World.hpp"
 
 
 World world;
+PartController particles;
 static Pad * pad = nullptr;
 static Ball * ball = nullptr;
 static int GROUND_Y = 764;
@@ -88,8 +90,10 @@ void testSFML(){
 		
 		ball->update();
 		world.update();
+		particles.update();
 	
 		window.clear();
+
 
 		window.draw(ground);
 
@@ -99,6 +103,7 @@ void testSFML(){
 		pad->draw(window);
 		
 		ball->draw(window);
+		particles.draw(window);
 		window.display();
 
 		if (ball->getPosition().y > Game::HEIGHT) {

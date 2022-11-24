@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Entities.hpp"
+#include "Part.hpp"
 
 class World{
 public:
@@ -15,3 +16,4 @@ public:
 };
 
 extern World world;
+extern PartController particles;

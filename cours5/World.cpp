@@ -56,12 +56,11 @@ void World::updateCollision() {
 
 void World::updateDeleted(){
 	for( auto b : world.toBeDeleted){
-		/*
 		auto& ws = world.statics;
 		auto pos = std::find(ws.begin(), ws.end(), b);
 		if (pos != ws.end())
 			world.statics.erase(pos);
-			*/
+			
 		delete b;
 	}
 	world.toBeDeleted.clear();

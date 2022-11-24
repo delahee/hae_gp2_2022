@@ -51,6 +51,8 @@ void Ball::initPos(Pad*hook){
 	}
 }
 
+
+int fr = 0;
 void Ball::update() {
 	lastPos = shp->getPosition();
 
@@ -59,6 +61,13 @@ void Ball::update() {
 	else {
 		shp->setPosition(shp->getPosition() + speed);
 	}
+
+	if( (fr>10) && !hooked){
+		particles.add(shp->getPosition());
+		fr = 0;
+	}
+	fr++;
+
 }
 
 Wall::Wall(sf::FloatRect r) : Entity(sf::Vector2f(r.left, r.top),new sf::RectangleShape(sf::Vector2f(r.width,r.height))) {
@@ -77,6 +86,7 @@ Brick::Brick(sf::FloatRect r) : Entity(sf::Vector2f(r.left, r.top), new sf::Rect
 
 void Brick::hit() {
 	hitPoint--;
-	if(hitPoint <= 0)
+	fr++;
+	if (hitPoint <= 0)
 		world.toBeDeleted.push_back(this);
 }
