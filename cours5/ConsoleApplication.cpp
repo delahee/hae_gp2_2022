@@ -12,10 +12,10 @@
 #include "World.hpp"
 
 
-static World world;
+World world;
 static Pad * pad = nullptr;
 static Ball * ball = nullptr;
-static int GROUND_Y = 700;
+static int GROUND_Y = 764;
 static float SIGHT_TARGET = 0.5f;
 static sf::RectangleShape ground(sf::Vector2f(Game::WIDTH,2));
 
@@ -48,8 +48,13 @@ void testSFML(){
 	auto wt = new Wall(sf::FloatRect( sf::Vector2f(-2 , -2), sf::Vector2f(Game::WIDTH + 4, 4)));
 	world.statics.push_back(wt);
 
-	auto br0 = new Brick( sf::FloatRect( sf::Vector2f(50,50), sf::Vector2f(32,8)));
-	world.statics.push_back(br0);
+	for (int j = 0; j < 4;j++) {
+		for (int i = 0; i < 18; i++) {
+			auto xOfs = ((j & 1) == 0) ? 0 : 32;
+			auto br0 = new Brick(sf::FloatRect(sf::Vector2f(50 + i * 72 + xOfs, 50 + j * 32), sf::Vector2f(64, 24)));
+			world.statics.push_back(br0);
+		}
+	}
 	
 	while (window.isOpen()) { // ONE FRAME
 
@@ -61,7 +66,6 @@ void testSFML(){
 			}
 		}
 
-		float speed = 3.0f;
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 			pad->moveLeft();
 		}
@@ -75,7 +79,7 @@ void testSFML(){
 				ball->hooked = nullptr;
 				auto dir = ball->getPosition() - pad->getPosition();
 				Lib::safeNormalize(dir);
-				float sp = 15.0f;
+				float sp = 16;
 				dir.x *= sp;
 				dir.y *= sp;
 				ball->speed = dir;

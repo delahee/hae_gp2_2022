@@ -2,6 +2,7 @@
 #include "SFML/Graphics/RectangleShape.hpp"
 #include "SFML/Graphics/CircleShape.hpp"
 #include "Lib.hpp"
+#include "World.hpp"
 
 Entity::Entity(sf::Vector2f pos, sf::Shape* shp) {
 	this->shp = shp;
@@ -21,7 +22,7 @@ Pad::Pad(sf::Vector2f pos) : Entity(pos, new sf::RectangleShape(sf::Vector2f(164
 	rect->setOutlineThickness(2);
 }
 
-static float speed = 6;
+static float speed = 16;
 
 void Pad::moveLeft() {
 	shp->setPosition(shp->getPosition() + sf::Vector2f(-2 * speed, 0));
@@ -75,6 +76,8 @@ Brick::Brick(sf::FloatRect r) : Entity(sf::Vector2f(r.left, r.top), new sf::Rect
 }
 
 void Brick::hit() {
-	//remove brick from world
-	int here = 0;
+	hitPoint--;
+	if(hitPoint <= 0){
+		world.toBeDeleted.push_back(this);
+	}
 }

@@ -1,36 +1,39 @@
 #include "World.hpp"
 void World::update() {
-	for(auto b : balls){
-		if( !b->hooked ){
+	updateCollision();
+	updateDeleted();
+}
+
+void World::updateCollision() {
+	for (auto b : balls) {
+		if (!b->hooked) {
 			int		nbColls = 0;
 			Entity* collider = nullptr;
 
 			auto bb = b->getGlobalBounds();
-			for( auto c : statics){
-				if(c->getGlobalBounds().intersects(bb)){
+			for (auto c : statics) {
+				if (c->getGlobalBounds().intersects(bb)) {
 					collider = c;
 					nbColls++;
 					c->hit();
 				}
 			}
 
-			if(nbColls>=2){
+			if (nbColls >= 2) {
 				b->setPosition(b->lastPos);
 				b->speed.x = -b->speed.x;
 				b->speed.y = -b->speed.y;
 			}
 			else if (nbColls >= 1) {
 				Pad* isPad = dynamic_cast<Pad*>(collider);
-				if(isPad)
-				{
-					if( b->getPosition().x < isPad->getPosition().x && (b->speed.x > 0))
+				if (isPad) {
+					if (b->getPosition().x < isPad->getPosition().x && (b->speed.x > 0))
 						b->speed.x = -b->speed.x;
 					else if (b->getPosition().x > isPad->getPosition().x && (b->speed.x < 0))
 						b->speed.x = -b->speed.x;
 					b->speed.y = -b->speed.y;
 				}
-				else 
-				{
+				else {
 					auto sb = collider->getGlobalBounds();
 					sf::FloatRect lineUp(sf::Vector2f(sb.left, sb.top), sf::Vector2f(sb.width, 1));
 					sf::FloatRect lineDown(sf::Vector2f(sb.left, sb.top + sb.height), sf::Vector2f(sb.width, 1));
@@ -49,4 +52,16 @@ void World::update() {
 			}
 		}
 	}
+}
+
+
+
+void World::updateDeleted(){
+	for( auto b : world.toBeDeleted){
+		auto& ws = world.statics;
+		auto pos = std::find(ws.begin(), ws.end(), b);
+		if (pos != ws.end())
+			world.statics.erase(pos);
+	}
+	world.toBeDeleted.clear();
 }
