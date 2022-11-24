@@ -77,7 +77,6 @@ Brick::Brick(sf::FloatRect r) : Entity(sf::Vector2f(r.left, r.top), new sf::Rect
 
 void Brick::hit() {
 	hitPoint--;
-	if(hitPoint <= 0){
+	if(hitPoint <= 0)
 		world.toBeDeleted.push_back(this);
-	}
 }
