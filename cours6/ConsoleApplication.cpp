@@ -140,12 +140,34 @@ struct Turtle{
 		}
 	}
 
+	bool replayCmdOne(Cmd& cmd) {
+		int speed = 2;
+		switch (cmd.id) {
+		case CmdId::Advance:		advance(speed); break;
+		case CmdId::RotateLeft:		turnLeft(speed); break;
+		case CmdId::RotateRight:	turnRight(speed); break;
+		case CmdId::Reset:			reset(); break;
+		case CmdId::PenDown:		setPenDown(true); break;
+		case CmdId::PenUp:			setPenDown(false); break;
+		default:
+			break;
+		}
+		cmd.data-= speed;
+		return cmd.data <= 0;
+	}
+
 	void updateReplay(){
-		//play the first command
-		// and remove it
 		if( replay.size()){
 			replayCmd(replay[0]);
 			replay.erase(replay.begin());
+		}
+	}
+
+	void updateReplayInterpolated(){
+		if( replay.size()){
+			bool isComplete = replayCmdOne(replay[0]);
+			if(isComplete)
+				replay.erase(replay.begin());
 		}
 	}
 
@@ -156,7 +178,12 @@ struct Turtle{
 
 		}
 		else if(replay.size()){
-			updateReplay();
+			//updateReplay();
+			updateReplayInterpolated();
+			// read cmd
+			// apply delta of 1 only
+			// substract from actual data 
+			// of data reaches zero remove command
 		}
 	};
 
@@ -212,7 +239,7 @@ void testSFML(){
 				if (event.key.code == sf::Keyboard::O) {
 					turtle.replay =
 					{
-						{CmdId::PenDown,100},
+						{CmdId::PenDown,0},
 						{CmdId::Advance,100},
 						{CmdId::RotateLeft,90},
 						{CmdId::Advance,100},
