@@ -49,7 +49,11 @@ struct Turtle{
 
 	void setPenDown(bool onOff) {
 		isPenDown = onOff;
-	}
+	};
+	
+	void setPenColor(sf::Color col) {
+		traceColor = col;
+	};
 
 	void advance(float pixels = 10){
 		auto pos = body.getPosition();
