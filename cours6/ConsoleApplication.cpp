@@ -12,8 +12,85 @@
 #include "Part.hpp"
 #include "World.hpp"
 
+using namespace sf;
+struct Turtle{
 
+	sf::Transform	trs;
+	sf::CircleShape	eyes[2]; 
+	sf::CircleShape	body; 
+	sf::VertexArray buf;
 
+	Turtle() {
+		body = CircleShape(24);
+		body.setOrigin(24,24);
+		body.setFillColor(sf::Color(0x3DEB74ff));
+		body.setOutlineColor(sf::Color(0xF54837ff));
+		body.setOutlineThickness(2);
+		body.setPosition(Game::WIDTH * 0.5f, Game::HEIGHT * 0.5f);
+
+		trs.translate(body.getPosition());
+		
+		float eyeRadius = 6;
+		for (auto& el  : eyes) {
+			el.setRadius(eyeRadius);
+			el.setOrigin(eyeRadius, eyeRadius);
+			el.setFillColor(sf::Color(0xF73455ff));
+			el.setOutlineColor(sf::Color(0x4A1019ff));
+			el.setOutlineThickness(1);
+		}
+
+		updateEyes();
+	};
+
+	void advance(float pixels = 10){
+
+		trs = trs.translate(Vector2f(pixels,0));
+		body.setPosition(trs.transformPoint(sf::Vector2f(0, 0)));
+	}
+
+	void turnLeft(float degrees = 10){
+		trs = trs.rotate(-degrees);
+	}
+
+	void turnRight(float degrees = 10) {
+		trs = trs.rotate(degrees);
+	}
+
+	void updateEyes() {
+		{
+			auto el = trs;
+			sf::Transform transed = el.translate(sf::Vector2f(24, 8));
+			auto elCenter = transed.transformPoint(sf::Vector2f(0, 0));
+			eyes[0].setPosition(elCenter);
+		}
+		{
+			auto er = trs;
+			sf::Transform transed = er.translate(sf::Vector2f(24, -8));
+			auto erCenter = transed.transformPoint(sf::Vector2f(0, 0));
+			eyes[1].setPosition(erCenter);
+		}
+	}
+
+	void update(float dt) {
+		updateEyes();
+	};
+
+	void draw(sf::RenderWindow& win) {
+		win.draw(body);
+		win.draw(eyes[0]);
+		win.draw(eyes[1]);
+	};
+};
+
+static Turtle turtle;
+/*
+* creer une class turtle ( derive de entity ? )
+* elle a son objet graphique cercle + orientation 
+* elle memorise son dessin dans ( vertex array ? )
+* on l'update, on la draw
+* ajouter commande advance( 1 px )
+* ... compléter la classe
+*/
 void testSFML(){
 	std::cout << std::filesystem::current_path() << std::endl;
 
@@ -23,8 +100,11 @@ void testSFML(){
 	window.setVerticalSyncEnabled(true);
 	
 
+	double frameStart = 0;
+	double frameEnd = 0.0015f;
 	while (window.isOpen()) { // ONE FRAME
-
+		frameStart = Lib::getTimestamp();
+		double dt = frameEnd - frameStart;
 		sf::Event event;
 		while (window.pollEvent(event)) { // ONE EVENT
 			if (event.type == sf::Event::Closed)
@@ -34,13 +114,21 @@ void testSFML(){
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+			turtle.turnLeft();
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+			turtle.advance();
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+			turtle.turnRight();
 		}
+		turtle.update(dt);
 		
 		window.clear();
-		window.display();
 
+		turtle.draw(window);
+		window.display();
+		frameEnd = Lib::getTimestamp();
 	}
 }
 
