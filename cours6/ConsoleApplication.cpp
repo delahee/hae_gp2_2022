@@ -18,7 +18,10 @@ struct Turtle{
 	sf::Transform	trs;
 	sf::CircleShape	eyes[2]; 
 	sf::CircleShape	body; 
-	sf::VertexArray buf;
+	sf::VertexArray traces;
+	sf::Color		traceColor = sf::Color(0xff0000ff);
+
+	bool			isPenDown = false;
 
 	Turtle() {
 		body = CircleShape(24);
@@ -26,8 +29,8 @@ struct Turtle{
 		body.setFillColor(sf::Color(0x3DEB74ff));
 		body.setOutlineColor(sf::Color(0xF54837ff));
 		body.setOutlineThickness(2);
-		body.setPosition(Game::WIDTH * 0.5f, Game::HEIGHT * 0.5f);
 
+		body.setPosition(Game::WIDTH * 0.5f, Game::HEIGHT * 0.5f);
 		trs.translate(body.getPosition());
 		
 		float eyeRadius = 6;
@@ -39,13 +42,27 @@ struct Turtle{
 			el.setOutlineThickness(1);
 		}
 
+		traces.setPrimitiveType(sf::Lines);
+
 		updateEyes();
 	};
 
+	void setPenDown(bool onOff) {
+		isPenDown = onOff;
+	}
+
 	void advance(float pixels = 10){
+		auto pos = body.getPosition();
 
 		trs = trs.translate(Vector2f(pixels,0));
 		body.setPosition(trs.transformPoint(sf::Vector2f(0, 0)));
+
+		auto npos = body.getPosition();
+
+		if( isPenDown ){
+			traces.append(sf::Vertex(pos, traceColor));
+			traces.append(sf::Vertex(npos, traceColor));
+		}
 	}
 
 	void turnLeft(float degrees = 10){
@@ -71,11 +88,20 @@ struct Turtle{
 		}
 	}
 
+	void reset(){
+		traces.clear();
+		trs = sf::Transform();
+		trs.translate(Game::WIDTH * 0.5f, Game::HEIGHT * 0.5f);
+		body.setPosition(trs.transformPoint(sf::Vector2f(0, 0)));
+		updateEyes();
+	}
+
 	void update(float dt) {
 		updateEyes();
 	};
 
 	void draw(sf::RenderWindow& win) {
+		win.draw(traces);
 		win.draw(body);
 		win.draw(eyes[0]);
 		win.draw(eyes[1]);
@@ -83,6 +109,7 @@ struct Turtle{
 };
 
 static Turtle turtle;
+
 /*
 * creer une class turtle ( derive de entity ? )
 * elle a son objet graphique cercle + orientation 
@@ -98,7 +125,6 @@ void testSFML(){
 	sf::RenderWindow window(sf::VideoMode(Game::WIDTH, Game::HEIGHT), "SFML works!");
 	window.setFramerateLimit(60);
 	window.setVerticalSyncEnabled(true);
-	
 
 	double frameStart = 0;
 	double frameEnd = 0.0015f;
@@ -110,17 +136,26 @@ void testSFML(){
 			if (event.type == sf::Event::Closed)
 				window.close();
 			if (event.type == sf::Event::KeyReleased){
+				if(event.key.code == sf::Keyboard::Space){
+					turtle.setPenDown(!turtle.isPenDown);
+				}
 			}
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 			turtle.turnLeft();
 		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace)) {
+			turtle.reset();
+		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 			turtle.advance();
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
 			turtle.turnRight();
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+			
 		}
 		turtle.update(dt);
 		
