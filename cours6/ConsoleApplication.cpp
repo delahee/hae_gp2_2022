@@ -12,6 +12,20 @@
 #include "Part.hpp"
 #include "World.hpp"
 
+enum class CmdId : int {
+	Advance,
+	RotateLeft,
+	RotateRight,
+	Reset,
+	PenDown,
+	PenUp,
+};
+
+struct Cmd{
+	CmdId	id = CmdId::Reset;
+	double	data = 0;
+};
+
 using namespace sf;
 struct Turtle{
 
@@ -20,6 +34,10 @@ struct Turtle{
 	sf::CircleShape	body; 
 	sf::VertexArray traces;
 	sf::Color		traceColor = sf::Color(0xff0000ff);
+
+	bool				enableRecord = false;
+	std::vector<Cmd> rec;
+	std::vector<Cmd> replay;
 
 	bool			isPenDown = false;
 
@@ -49,6 +67,8 @@ struct Turtle{
 
 	void setPenDown(bool onOff) {
 		isPenDown = onOff;
+		if (enableRecord)
+			rec.push_back({ onOff ? CmdId::PenDown : CmdId::PenUp, 0 });
 	};
 	
 	void setPenColor(sf::Color col) {
@@ -67,14 +87,21 @@ struct Turtle{
 			traces.append(sf::Vertex(pos, traceColor));
 			traces.append(sf::Vertex(npos, traceColor));
 		}
+
+		if (enableRecord)
+			rec.push_back({ CmdId::Advance , pixels });
 	}
 
 	void turnLeft(float degrees = 10){
 		trs = trs.rotate(-degrees);
+		if(enableRecord)
+			rec.push_back({ CmdId::RotateLeft , degrees });
 	}
 
 	void turnRight(float degrees = 10) {
 		trs = trs.rotate(degrees);
+		if (enableRecord)
+			rec.push_back({ CmdId::RotateRight , degrees });
 	}
 
 	void updateEyes() {
@@ -100,8 +127,37 @@ struct Turtle{
 		updateEyes();
 	}
 
+	void replayCmd(Cmd&cmd){
+		switch (cmd.id) {
+		case CmdId::Advance:		advance(cmd.data); break;
+		case CmdId::RotateLeft:		turnLeft(cmd.data); break;
+		case CmdId::RotateRight:	turnRight(cmd.data); break;
+		case CmdId::Reset:			reset(); break;
+		case CmdId::PenDown:		setPenDown(true); break;
+		case CmdId::PenUp:			setPenDown(false); break;
+		default:
+			break;
+		}
+	}
+
+	void updateReplay(){
+		//play the first command
+		// and remove it
+		if( replay.size()){
+			replayCmd(replay[0]);
+			replay.erase(replay.begin());
+		}
+	}
+
 	void update(float dt) {
 		updateEyes();
+
+		if(enableRecord){
+
+		}
+		else if(replay.size()){
+			updateReplay();
+		}
 	};
 
 	void draw(sf::RenderWindow& win) {
@@ -143,6 +199,30 @@ void testSFML(){
 				if(event.key.code == sf::Keyboard::Space){
 					turtle.setPenDown(!turtle.isPenDown);
 				}
+				if (event.key.code == sf::Keyboard::R) {
+					turtle.enableRecord = !turtle.enableRecord;
+				}
+				if (event.key.code == sf::Keyboard::P) {
+					turtle.replay = turtle.rec;
+				}
+				if (event.key.code == sf::Keyboard::K) {
+					turtle.replay = { {CmdId::PenDown,100},{CmdId::Advance,100} };
+				}
+
+				if (event.key.code == sf::Keyboard::O) {
+					turtle.replay =
+					{
+						{CmdId::PenDown,100},
+						{CmdId::Advance,100},
+						{CmdId::RotateLeft,90},
+						{CmdId::Advance,100},
+						{CmdId::RotateLeft,90},
+						{CmdId::Advance,100},
+						{CmdId::RotateLeft,90},
+						{CmdId::Advance,100},
+						{CmdId::RotateLeft,90},
+					};
+				}
 			}
 		}
 
@@ -158,9 +238,7 @@ void testSFML(){
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
 			turtle.turnRight();
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-			
-		}
+		
 		turtle.update(dt);
 		
 		window.clear();
