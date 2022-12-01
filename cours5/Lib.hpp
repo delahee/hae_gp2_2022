@@ -237,6 +237,12 @@ public:
 	}
 
 	static int rand();
+
+	// 0 - 1 
+	//=> *2 
+	//0 - 2 
+	// -1
+	// -1 1
 	static float randF();
 
 	static float lerp(float a, float b, float t) {

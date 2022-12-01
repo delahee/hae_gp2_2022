@@ -27,7 +27,7 @@ public:
 
 	void draw(sf::RenderWindow& win);
 
-	virtual void hit() {};
+	virtual void hit();
 };
 
 class Pad : public Entity {
@@ -65,4 +65,6 @@ public:
 	Brick(sf::FloatRect r);
 
 	virtual void hit() override;
+
+	void setupDebris();
 };

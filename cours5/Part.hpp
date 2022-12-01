@@ -15,11 +15,13 @@ struct Part{
 
 	void update();
 	void draw(sf::RenderWindow& win);
+	void drawInto(sf::VertexArray& va,sf::RenderWindow& win);
 };
 
 class PartController{
 public:
-	std::vector<Part> data;
+	std::vector<Part>	data;
+	sf::VertexArray		va;
 
 	void add(sf::Vector2f pos);
 	void update();

@@ -57,7 +57,10 @@ void testSFML(){
 			world.statics.push_back(br0);
 		}
 	}
-	
+
+	sf::View view(sf::FloatRect(0.f, 0.f, Game::WIDTH, Game::HEIGHT));
+	window.setView(view);
+
 	while (window.isOpen()) { // ONE FRAME
 
 		sf::Event event;
@@ -91,9 +94,8 @@ void testSFML(){
 		ball->update();
 		world.update();
 		particles.update();
-	
+		
 		window.clear();
-
 
 		window.draw(ground);
 
@@ -104,6 +106,9 @@ void testSFML(){
 		
 		ball->draw(window);
 		particles.draw(window);
+
+
+		view.zoom(0.5);
 		window.display();
 
 		if (ball->getPosition().y > Game::HEIGHT) {

@@ -12,6 +12,7 @@
 #include "Part.hpp"
 #include "World.hpp"
 #include "CmdFile.hpp"
+#include "imgui.h"
 
 
 using namespace sf;
@@ -27,6 +28,7 @@ struct Turtle{
 	std::vector<Cmd>	rec;
 	std::vector<Cmd>	replay;
 
+	float				animSpeed = 1.0f;
 	bool				isPenDown = false;
 
 	Turtle() {
@@ -113,6 +115,7 @@ struct Turtle{
 		trs.translate(Game::WIDTH * 0.5f, Game::HEIGHT * 0.5f);
 		body.setPosition(trs.transformPoint(sf::Vector2f(0, 0)));
 		updateEyes();
+		animSpeed = 1.0f;
 	}
 
 	void replayCmd(Cmd&cmd){
@@ -123,24 +126,34 @@ struct Turtle{
 		case CmdId::Reset:			reset(); break;
 		case CmdId::PenDown:		setPenDown(true); break;
 		case CmdId::PenUp:			setPenDown(false); break;
+		case CmdId::Speed:			animSpeed = cmd.data; break;
+		case CmdId::Color:			traceColor = sf::Color(cmd.data,cmd.data2,cmd.data3); break;
 		default:
 			break;
 		}
 	}
 
 	bool replayCmdOne(Cmd& cmd) {
-		int speed = 2;
+		int f = 2;
+		float futureVal = f * animSpeed;
+		if (cmd.data < futureVal) 
+			futureVal = cmd.data;
 		switch (cmd.id) {
-		case CmdId::Advance:		advance(speed); break;
-		case CmdId::RotateLeft:		turnLeft(speed); break;
-		case CmdId::RotateRight:	turnRight(speed); break;
+		case CmdId::Advance:		advance(futureVal); break;
+		case CmdId::RotateLeft:		turnLeft(futureVal); break;
+		case CmdId::RotateRight:	turnRight(futureVal); break;
+		case CmdId::Speed:			
+			this->animSpeed = cmd.data; 
+			cmd.data = 0; 
+			break;
 		case CmdId::Reset:			reset(); break;
 		case CmdId::PenDown:		setPenDown(true); break;
 		case CmdId::PenUp:			setPenDown(false); break;
+		case CmdId::Color:			traceColor = sf::Color(cmd.data, cmd.data2, cmd.data3); cmd.data = 0; break;
 		default:
 			break;
 		}
-		cmd.data-= speed;
+		cmd.data-= animSpeed * f;
 		return cmd.data <= 0;
 	}
 
@@ -201,13 +214,21 @@ void testSFML(){
 	window.setFramerateLimit(60);
 	window.setVerticalSyncEnabled(true);
 
+	time_t lastModificationTime = {};
 	double frameStart = 0;
 	double frameEnd = 0.0015f;
+
+	ImGui::SFML::Init(window);
 	while (window.isOpen()) { // ONE FRAME
-		frameStart = Lib::getTimestamp();
 		double dt = frameEnd - frameStart;
+		frameStart = Lib::getTimestamp();
 		sf::Event event;
+
+		bool doHotload = false;
+
 		while (window.pollEvent(event)) { // ONE EVENT
+			ImGui::SFML::ProcessEvent(window, event);
+
 			if (event.type == sf::Event::Closed)
 				window.close();
 			if (event.type == sf::Event::KeyReleased){
@@ -246,10 +267,32 @@ void testSFML(){
 				}
 				
 				if (event.key.code == sf::Keyboard::L) {
-					turtle.replay = CmdFile::loadScript("save.txt");
-					turtle.enableRecord = false;
+					doHotload = true;
 				}
 			}
+		}
+
+		
+
+		//if!hotload
+		//sometime ask for mtime to do hotload on ourselves
+
+		static int timer = 0;
+		timer++;
+		if( timer > 60){
+			struct stat ts = {};
+			stat("save.txt", &ts);
+			if( ts.st_mtime > lastModificationTime )
+				doHotload = true;
+			timer = 0;
+		}
+
+		if( doHotload ){
+			turtle.replay = CmdFile::loadScript("save.txt");
+			turtle.enableRecord = false;
+			struct stat ts = {};
+			stat("save.txt", &ts);
+			lastModificationTime = ts.st_mtime;
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
@@ -267,12 +310,21 @@ void testSFML(){
 		
 		turtle.update(dt);
 		
+		bool t = true;
+		ImGui::SFML::Update(window, sf::Time( sf::seconds(dt)));
+		{
+			ImGui::ShowDemoWindow(&t);
+		}
 		window.clear();
 
 		turtle.draw(window);
+
+		ImGui::EndFrame();
+		ImGui::SFML::Render(window);
 		window.display();
 		frameEnd = Lib::getTimestamp();
 	}
+	ImGui::SFML::Shutdown();
 }
 
 int WinMain() {
