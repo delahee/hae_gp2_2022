@@ -75,7 +75,7 @@ public:
 			}
 			else {
 				fseek(f, pos, 0);
-				nbRead = fscanf(f, "%s %f\n", cmdName, &c.data);
+				nbRead = fscanf_s(f, "%s %f\n", cmdName, 128,&c.data);
 				if (0 == strcmp(cmdName, "Advance"))		c.id = CmdId::Advance;
 				if (0 == strcmp(cmdName, "RotateLeft"))		c.id = CmdId::RotateLeft;
 				if (0 == strcmp(cmdName, "RotateRight"))	c.id = CmdId::RotateRight;
