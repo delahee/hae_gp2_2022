@@ -27,6 +27,7 @@ struct Turtle{
 	std::vector<Cmd>	rec;
 	std::vector<Cmd>	replay;
 
+	float				animSpeed = 1.0f;
 	bool				isPenDown = false;
 
 	Turtle() {
@@ -113,6 +114,7 @@ struct Turtle{
 		trs.translate(Game::WIDTH * 0.5f, Game::HEIGHT * 0.5f);
 		body.setPosition(trs.transformPoint(sf::Vector2f(0, 0)));
 		updateEyes();
+		animSpeed = 1.0f;
 	}
 
 	void replayCmd(Cmd&cmd){
@@ -123,24 +125,34 @@ struct Turtle{
 		case CmdId::Reset:			reset(); break;
 		case CmdId::PenDown:		setPenDown(true); break;
 		case CmdId::PenUp:			setPenDown(false); break;
+		case CmdId::Speed:			animSpeed = cmd.data; break;
+		case CmdId::Color:			traceColor = sf::Color(cmd.data,cmd.data2,cmd.data3); break;
 		default:
 			break;
 		}
 	}
 
 	bool replayCmdOne(Cmd& cmd) {
-		int speed = 2;
+		int f = 2;
+		float futureVal = f * animSpeed;
+		if (cmd.data < futureVal) 
+			futureVal = cmd.data;
 		switch (cmd.id) {
-		case CmdId::Advance:		advance(speed); break;
-		case CmdId::RotateLeft:		turnLeft(speed); break;
-		case CmdId::RotateRight:	turnRight(speed); break;
+		case CmdId::Advance:		advance(futureVal); break;
+		case CmdId::RotateLeft:		turnLeft(futureVal); break;
+		case CmdId::RotateRight:	turnRight(futureVal); break;
+		case CmdId::Speed:			
+			this->animSpeed = cmd.data; 
+			cmd.data = 0; 
+			break;
 		case CmdId::Reset:			reset(); break;
 		case CmdId::PenDown:		setPenDown(true); break;
 		case CmdId::PenUp:			setPenDown(false); break;
+		case CmdId::Color:			traceColor = sf::Color(cmd.data, cmd.data2, cmd.data3); cmd.data = 0; break;
 		default:
 			break;
 		}
-		cmd.data-= speed;
+		cmd.data-= animSpeed * f;
 		return cmd.data <= 0;
 	}
 
