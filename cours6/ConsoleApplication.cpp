@@ -11,35 +11,23 @@
 #include "Game.hpp"
 #include "Part.hpp"
 #include "World.hpp"
+#include "CmdFile.hpp"
 
-enum class CmdId : int {
-	Advance,
-	RotateLeft,
-	RotateRight,
-	Reset,
-	PenDown,
-	PenUp,
-};
-
-struct Cmd{
-	CmdId	id = CmdId::Reset;
-	double	data = 0;
-};
 
 using namespace sf;
 struct Turtle{
 
-	sf::Transform	trs;
-	sf::CircleShape	eyes[2]; 
-	sf::CircleShape	body; 
-	sf::VertexArray traces;
-	sf::Color		traceColor = sf::Color(0xff0000ff);
+	sf::Transform		trs;
+	sf::CircleShape		eyes[2];
+	sf::CircleShape		body;
+	sf::VertexArray		traces;
+	sf::Color			traceColor = sf::Color(0xff0000ff);
 
-	bool				enableRecord = false;
-	std::vector<Cmd> rec;
-	std::vector<Cmd> replay;
+	bool				enableRecord = true;
+	std::vector<Cmd>	rec;
+	std::vector<Cmd>	replay;
 
-	bool			isPenDown = false;
+	bool				isPenDown = false;
 
 	Turtle() {
 		body = CircleShape(24);
@@ -228,9 +216,11 @@ void testSFML(){
 				}
 				if (event.key.code == sf::Keyboard::R) {
 					turtle.enableRecord = !turtle.enableRecord;
+					printf("Recording %d\n", turtle.enableRecord);
 				}
 				if (event.key.code == sf::Keyboard::P) {
 					turtle.replay = turtle.rec;
+					printf("Replaying %d \n");
 				}
 				if (event.key.code == sf::Keyboard::K) {
 					turtle.replay = { {CmdId::PenDown,100},{CmdId::Advance,100} };
@@ -249,6 +239,15 @@ void testSFML(){
 						{CmdId::Advance,100},
 						{CmdId::RotateLeft,90},
 					};
+				}
+
+				if (event.key.code == sf::Keyboard::S) {
+					CmdFile::saveScript("save.txt", turtle.rec);
+				}
+				
+				if (event.key.code == sf::Keyboard::L) {
+					turtle.replay = CmdFile::loadScript("save.txt");
+					turtle.enableRecord = false;
 				}
 			}
 		}
@@ -274,6 +273,11 @@ void testSFML(){
 		window.display();
 		frameEnd = Lib::getTimestamp();
 	}
+}
+
+int WinMain() {
+	testSFML();
+	return 0;
 }
 
 int main(){
