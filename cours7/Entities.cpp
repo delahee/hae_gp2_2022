@@ -37,7 +37,6 @@ void Entity::im() {
 	Value("pos x", shp->getPosition().x);
 	Value("pos y", shp->getPosition().y);
 
-
 	if( Button("advance 1 cell") ){
 		cy--;
 		syncGridToPixel();
@@ -46,14 +45,28 @@ void Entity::im() {
 		cy++;
 		syncGridToPixel();
 	}
-
 	if (Button("left 1 cell")) {
 		cx--;
 		syncGridToPixel();
 	}
+
 	if (Button("right 1 cell")) {
 		cx++;
 		syncGridToPixel();
+	}
+
+	float nudge = 0.1f;
+	if (Button("advance 1 nudge")) {
+		ry-=nudge;
+	}
+	if (Button("back 1 nudge")) {
+		ry+= nudge;
+	}
+	if (Button("left 1 nudge")) {
+		rx-= nudge;
+	}
+	if (Button("right 1 nudge")) {
+		rx+= nudge;
 	}
 
 }
@@ -61,11 +74,29 @@ void Entity::im() {
 void Entity::syncGridToPixel() {
 	float pxX = (cx + rx) * Cst::CELL_SIZE;
 	float pxY = (cy + ry) * Cst::CELL_SIZE;
-	shp->setPosition(sf::Vector2f(pxX,pxY));
+	shp->setPosition(sf::Vector2f((int)pxX,(int)pxY));
 }
 
 void Entity::update() {
-
+	bool needSync = true;
+	while( rx > 1){
+		rx--;
+		cx++;//shall we collide before crossing cell bound ?
+	}
+	while(rx < 0) {
+		rx++;
+		cx--;//shall we collide before crossing cell bound ?
+	}
+	while (ry > 1) {
+		ry--;
+		cy++;//shall we collide before crossing cell bound ?
+	}
+	while (ry < 0) {
+		ry++;
+		cy--;//shall we collide before crossing cell bound ?
+	}
+	if (needSync)
+		syncGridToPixel();
 }
 
 void Entity::draw(sf::RenderWindow& win) {

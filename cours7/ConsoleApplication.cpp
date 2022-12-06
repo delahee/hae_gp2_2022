@@ -19,7 +19,7 @@
 using namespace sf;
 class Player : public Entity {
 public:
-	Player() : Entity( sf::Vector2f(50,100) , new RectangleShape(sf::Vector2f(12,32)) ){
+	Player() : Entity( sf::Vector2f(50,100) , new RectangleShape(sf::Vector2f(24,64)) ){
 		auto rect  = (sf::RectangleShape*) this->shp;
 		rect->setOrigin(6, 32);
 		rect->setFillColor(sf::Color::Red);
@@ -73,13 +73,18 @@ void testSFML(){
 		}
 
 
+		float nudge = 0.2f;
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+			player->rx -= nudge;
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace)) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+			player->ry += nudge;
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+			player->ry -= nudge;
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+			player->rx += nudge;
 		}
 		
 		player->update();
