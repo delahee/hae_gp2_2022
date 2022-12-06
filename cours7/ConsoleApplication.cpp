@@ -70,6 +70,14 @@ void testSFML(){
 				}
 				
 			}
+
+			if (event.type == sf::Event::MouseButtonPressed) {
+				int mcx = (int)event.mouseButton.x / Cst::CELL_SIZE;
+				int mcy = (int)event.mouseButton.y / Cst::CELL_SIZE;
+				//add block to world's statics
+				//add test against statics in world
+				world.poke(mcx, mcy);
+			}
 		}
 
 
@@ -103,7 +111,9 @@ void testSFML(){
 		}
 		window.clear();
 
+		
 		player->draw(window);
+		world.draw(window);
 
 		ImGui::EndFrame();
 		ImGui::SFML::Render(window);
