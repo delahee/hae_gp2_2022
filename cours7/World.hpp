@@ -5,12 +5,9 @@
 
 class World{
 public:
-
 	World();
-	std::vector<Entity*>	statics;
-	std::vector<Entity*>	toBeDeleted;
-
-	void update();
-	void updateCollision();
-	void updateDeleted();
+	std::vector<sf::Vector2i>	statics;
+	bool collides(float gx, float gy);
 };
+
+extern World world;

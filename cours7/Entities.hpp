@@ -10,17 +10,17 @@ class Entity{
 public:
 	sf::Shape*		shp = nullptr;
 
-	float rx = 0.5f;//
-	float ry = 1.0f;
+	float			rx = 0.5f;//
+	float			ry = 1.0f;
 
-	float dx = 0.0f;
-	float dy = 0.0f;
+	float			dx = 0.0f;
+	float			dy = 0.0f;
 
-	float frictX = 0.92f;
-	float frictY = 0.92f;
+	float			frictX = 0.92f;
+	float			frictY = 0.92f;
 
-	int cx = 0;
-	int cy = 0;
+	int				cx = 0;
+	int				cy = 0;
 
 	Entity(sf::Vector2f pixelPos, sf::Shape* shp);
 
@@ -28,8 +28,6 @@ public:
 	void setGridPos(sf::Vector2f npos);
 
 	void im();
-
-
 
 	inline auto getLocalBounds() const {
 		return shp->getLocalBounds();
@@ -49,4 +47,5 @@ public:
 	void syncGridToPixel();
 	void update();
 	void draw(sf::RenderWindow& win);
+	bool collides(float gx,float gy);
 };

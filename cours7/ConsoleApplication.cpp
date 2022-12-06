@@ -21,7 +21,7 @@ class Player : public Entity {
 public:
 	Player() : Entity( sf::Vector2f(50,100) , new RectangleShape(sf::Vector2f(24,64)) ){
 		auto rect  = (sf::RectangleShape*) this->shp;
-		rect->setOrigin(6, 32);
+		rect->setOrigin(12, 32);
 		rect->setFillColor(sf::Color::Red);
 		rect->setOutlineColor(sf::Color::Green);
 		rect->setOutlineThickness(2);

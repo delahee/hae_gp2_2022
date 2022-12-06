@@ -30,47 +30,11 @@ void Entity::setGridPos(sf::Vector2f npos) {
 
 void Entity::im() {
 	using namespace ImGui;
-
 	DragFloat2("frict", &frictX, 0.01,0.5,1.0);
-	Value("cx", cx);
-	Value("cy", cy);
-	Value("rx", rx);
-	Value("ry", ry);
+	DragInt2("cx", &cx);
+	DragFloat2("rx", &rx);
 	Value("pos x", shp->getPosition().x);
 	Value("pos y", shp->getPosition().y);
-
-	if( Button("advance 1 cell") ){
-		cy--;
-		syncGridToPixel();
-	}
-	if (Button("back 1 cell")) {
-		cy++;
-		syncGridToPixel();
-	}
-	if (Button("left 1 cell")) {
-		cx--;
-		syncGridToPixel();
-	}
-
-	if (Button("right 1 cell")) {
-		cx++;
-		syncGridToPixel();
-	}
-
-	float nudge = 0.1f;
-	if (Button("advance 1 nudge")) {
-		ry-=nudge;
-	}
-	if (Button("back 1 nudge")) {
-		ry+= nudge;
-	}
-	if (Button("left 1 nudge")) {
-		rx-= nudge;
-	}
-	if (Button("right 1 nudge")) {
-		rx+= nudge;
-	}
-
 }
 
 void Entity::syncGridToPixel() {
@@ -88,20 +52,44 @@ void Entity::update() {
 
 	bool needSync = true;
 	while( rx > 1){
-		rx--;
-		cx++;//shall we collide before crossing cell bound ?
+		if( collides( cx+1, cy) ){
+			rx--;
+			dx = 0;
+		}
+		else {
+			rx--;
+			cx++;//shall we collide before crossing cell bound ?
+		}
 	}
 	while(rx < 0) {
-		rx++;
-		cx--;//shall we collide before crossing cell bound ?
+		if (collides(cx-1, cy)) {
+			rx++;
+			dx = 0;
+		}
+		else {
+			rx++;
+			cx--;//shall we collide before crossing cell bound ?
+		}
 	}
 	while (ry > 1) {
-		ry--;
-		cy++;//shall we collide before crossing cell bound ?
+		if (collides(cx, cy+1)) {
+			ry = 0.99f;
+			dy = 0;
+		}
+		else {
+			ry--;
+			cy++;//shall we collide before crossing cell bound ?
+		}
 	}
 	while (ry < 0) {
-		ry++;
-		cy--;//shall we collide before crossing cell bound ?
+		if (collides(cx, cy - 1)) {
+			ry = 0.0f;
+			dy = 0;
+		}
+		else {
+			ry++;
+			cy--;//shall we collide before crossing cell bound ?
+		}
 	}
 	if (needSync)
 		syncGridToPixel();
@@ -109,4 +97,8 @@ void Entity::update() {
 
 void Entity::draw(sf::RenderWindow& win) {
 	win.draw(*shp);
+}
+
+bool Entity::collides(float gx, float gy) {
+	return world.collides(gx, gy);
 }

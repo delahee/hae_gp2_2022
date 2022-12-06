@@ -1,20 +1,20 @@
+#include "Game.hpp"
 #include "World.hpp"
-void World::update() {
-	updateCollision();
-	updateDeleted();
+
+World world;
+
+World::World(){
+
 }
 
-void World::updateCollision() {
-	
-}
-
-void World::updateDeleted(){
-	for( auto b : toBeDeleted){
-		auto& ws = statics;
-		auto pos = std::find(ws.begin(), ws.end(), b);
-		if (pos != ws.end())
-			statics.erase(pos);
-		delete b;
-	}
-	toBeDeleted.clear();
+bool World::collides(float gx, float gy) {
+	if( gx > Game::WIDTH / Cst::CELL_SIZE)
+		return true;
+	if (gy > ((Game::HEIGHT / Cst::CELL_SIZE)-3))
+		return true;
+	else if (gx < 0) 
+		return true;
+	else if (gy < 0)
+		return true;
+	return false;
 }
