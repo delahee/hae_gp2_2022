@@ -13,6 +13,12 @@ public:
 	float rx = 0.5f;//
 	float ry = 1.0f;
 
+	float dx = 0.0f;
+	float dy = 0.0f;
+
+	float frictX = 0.92f;
+	float frictY = 0.92f;
+
 	int cx = 0;
 	int cy = 0;
 

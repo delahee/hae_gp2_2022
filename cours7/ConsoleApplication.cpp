@@ -73,18 +73,20 @@ void testSFML(){
 		}
 
 
-		float nudge = 0.2f;
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-			player->rx -= nudge;
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-			player->ry += nudge;
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-			player->ry -= nudge;
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-			player->rx += nudge;
+		sf::Vector2f dir(0,0);
+		float sp = 0.2f;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+			dir.x--;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+			dir.y++;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) 
+			dir.y--;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) 
+			dir.x++;
+		float len = sqrt(dir.x * dir.x + dir.y * dir.y);
+		if( len ){
+			player->dx += dir.x * sp;
+			player->dy += dir.y * sp;
 		}
 		
 		player->update();

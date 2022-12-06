@@ -30,6 +30,8 @@ void Entity::setGridPos(sf::Vector2f npos) {
 
 void Entity::im() {
 	using namespace ImGui;
+
+	DragFloat2("frict", &frictX, 0.01,0.5,1.0);
 	Value("cx", cx);
 	Value("cy", cy);
 	Value("rx", rx);
@@ -78,6 +80,12 @@ void Entity::syncGridToPixel() {
 }
 
 void Entity::update() {
+	rx += dx;
+	ry += dy;
+
+	dx *= frictX;
+	dy *= frictY;
+
 	bool needSync = true;
 	while( rx > 1){
 		rx--;
