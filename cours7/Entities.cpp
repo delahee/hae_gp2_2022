@@ -47,6 +47,8 @@ void Entity::update() {
 	rx += dx;
 	ry += dy;
 
+	dy += gravY;
+
 	dx *= frictX;
 	dy *= frictY;
 
@@ -82,7 +84,10 @@ void Entity::update() {
 		}
 	}
 	while (ry < 0) {
-		if (collides(cx, cy - 1)) {
+		bool testFeet = collides(cx, cy - 1);
+		bool testBody = collides(cx, cy - 2);
+		bool testHead = collides(cx, cy - 3);
+		if (testFeet|| testBody || testHead) {
 			ry = 0.0f;
 			dy = 0;
 		}

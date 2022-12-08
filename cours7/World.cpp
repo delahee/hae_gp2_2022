@@ -10,12 +10,20 @@ World::World(){
 bool World::collides(float gx, float gy) {
 	if( gx > Game::WIDTH / Cst::CELL_SIZE)
 		return true;
-	if (gy > ((Game::HEIGHT / Cst::CELL_SIZE)-3))
+	if (gy > ((Game::HEIGHT / Cst::CELL_SIZE)-2))
 		return true;
 	else if (gx < 0) 
 		return true;
 	else if (gy < 0)
 		return true;
+
+	int cx = (int)gx;
+	int cy = (int)gy;
+
+	for(auto & s : statics)
+		if (s.x == cx && s.y == cy)
+			return true;
+
 	return false;
 }
 

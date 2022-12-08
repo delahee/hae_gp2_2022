@@ -16,8 +16,10 @@ public:
 	float			dx = 0.0f;
 	float			dy = 0.0f;
 
-	float			frictX = 0.92f;
-	float			frictY = 0.92f;
+	float			frictX = 0.91f;
+	float			frictY = 0.96f;
+
+	float			gravY = 0.1f;
 
 	int				cx = 0;
 	int				cy = 0;
