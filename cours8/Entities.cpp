@@ -12,6 +12,8 @@ Entity::Entity(sf::Vector2f pixelPos, sf::Shape* shp) {
 	
 	setPixelPos(pixelPos);
 	idleState = new StateIdle(this);
+	jumpState = new StateJump(this);
+	walkState = new StateWalk(this);
 
 	currentState = idleState;
 }
@@ -54,10 +56,12 @@ void Entity::onEvent(sf::Event &e ){
 void Entity::update() {
 
 	currentState->updateState();
+
 	rx += dx;
 	ry += dy;
 
-	dy += gravY;
+	if( applyGravity)
+		dy += gravY;
 
 	dx *= frictX;
 	dy *= frictY;
@@ -108,6 +112,7 @@ void Entity::update() {
 	}
 	if (needSync)
 		syncGridToPixel();
+	stateLife++;
 }
 
 void Entity::draw(sf::RenderWindow& win) {
@@ -116,4 +121,35 @@ void Entity::draw(sf::RenderWindow& win) {
 
 bool Entity::collides(float gx, float gy) {
 	return world.collides(gx, gy);
+}
+
+void Entity::walkLeftRightControl() {
+	sf::Vector2f dir(0, 0);
+	float sp = 0.15f;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+		dir.x--;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+		dir.x++;
+	float len = sqrt(dir.x * dir.x + dir.y * dir.y);
+	if (len) {
+		dir.x /= len;
+		dir.y /= len;
+		dx += dir.x * sp;
+		dy += dir.y * sp;
+	}
+}
+
+void Entity::changeState(State* st) {
+	st->onEnterState();
+	currentState = st;
+	stateLife = 0.0f;
+}
+
+void Entity::jumpControl(sf::Event& event) {
+	if (event.type == sf::Event::KeyPressed) {
+		if (event.key.code == sf::Keyboard::Up
+			|| event.key.code == sf::Keyboard::Space) {
+			dy -= 1.5f;
+		}
+	}
 }

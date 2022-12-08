@@ -26,8 +26,13 @@ public:
 	int				cx = 0;
 	int				cy = 0;
 
+	float			stateLife = 0.0f;
+	bool			applyGravity = true;
+
 	State*			currentState = nullptr;
 	State*			idleState = nullptr;
+	State*			jumpState = nullptr;
+	State*			walkState = nullptr;
 
 	Entity(sf::Vector2f pixelPos, sf::Shape* shp);
 
@@ -56,4 +61,9 @@ public:
 	void update();
 	void draw(sf::RenderWindow& win);
 	bool collides(float gx,float gy);
+
+	void jumpControl(sf::Event& e);
+	void walkLeftRightControl();
+
+	void changeState(State * st);
 };

@@ -22,3 +22,25 @@ public:
 	virtual void onEvent(sf::Event& ev) override;
 	virtual void updateState() override;
 };
+
+class StateJump : public State {
+public:
+	StateJump(Entity* e) {
+		owner = e;
+	}
+
+	virtual void onEnterState() override;
+	virtual void onEvent(sf::Event& ev) override;
+	virtual void updateState() override;
+};
+
+class StateWalk : public State {
+public:
+	StateWalk(Entity* e) {
+		owner = e;
+	};
+
+	virtual void onEnterState() override;
+	virtual void onEvent(sf::Event& ev) override;
+	virtual void updateState() override;
+};

@@ -55,7 +55,7 @@ void Entity::update() {
 	bool needSync = true;
 	while( rx > 1){
 		if( collides( cx+1, cy) ){
-			rx--;
+			rx = 0.99f;
 			dx = 0;
 		}
 		else {
@@ -65,7 +65,7 @@ void Entity::update() {
 	}
 	while(rx < 0) {
 		if (collides(cx-1, cy)) {
-			rx++;
+			rx = 0;
 			dx = 0;
 		}
 		else {
