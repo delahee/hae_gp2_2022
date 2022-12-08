@@ -75,19 +75,7 @@ void testSFML(){
 				CmdFile::saveScript("res/save.txt",cmds);
 			}
 		}
-		sf::Vector2f dir(0,0);
-		float sp = 0.15f;
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-			dir.x--;
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) 
-			dir.x++;
-		float len = sqrt(dir.x * dir.x + dir.y * dir.y);
-		if( len ){
-			dir.x /= len;
-			dir.y /= len;
-			player->dx += dir.x * sp;
-			player->dy += dir.y * sp;
-		}
+		
 		player->update();
 		bool t = true;
 		ImGui::SFML::Update(window, sf::Time( sf::seconds(dt)));
@@ -101,7 +89,6 @@ void testSFML(){
 			ImGui::End();
 		}
 		window.clear();
-
 		
 		player->draw(window);
 		world.draw(window);
