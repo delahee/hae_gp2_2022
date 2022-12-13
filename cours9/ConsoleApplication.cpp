@@ -29,18 +29,23 @@ public:
 	}
 };
 
-
+/*
 namespace std {
-	template <>
-	struct hash<sf::Vector2i> {
+	template <> struct hash<sf::Vector2i> {
 		std::size_t operator()(const sf::Vector2i& k) const {
-			using std::size_t;
 			using std::hash;
-			using std::string;
-			return size_t((k.y << 16) | k.x);
+			return std::size_t((k.y << 16) | k.x);
 		}
 	};
+}*/
 
+namespace std {
+	template <> struct hash<sf::Vector2i> {
+		std::size_t operator()(const sf::Vector2i& k) const {
+			using std::hash;
+			return std::size_t((k.y * 16 * 1024) + k.x);
+		};
+	};
 }
 
 
@@ -60,6 +65,9 @@ void testSFML(){
 	double frameEnd = 0.0015f;
 
 	ImGui::SFML::Init(window);
+
+	sf::VertexArray points;
+	points.setPrimitiveType(Points);
 
 	auto bricks = CmdFile::loadScript("res/save.txt");
 	for( auto & c : bricks)
@@ -102,15 +110,19 @@ void testSFML(){
 					//appeler afficher graph( g )
 					
 					std::unordered_map<sf::Vector2i, bool> g;
-
 					for(int y = 0; y <  1 +Game::HEIGHT / Cst::CELL_SIZE; ++y)
-					for(int x = 0; x <  1 +Game::WIDTH / Cst::CELL_SIZE; ++x)
-					{
+					for(int x = 0; x <  1 +Game::WIDTH / Cst::CELL_SIZE; ++x){
 						if( !world.collides(x,y))
 							g[sf::Vector2i(x, y)] = true;
 					}
-					auto printGraph = [](auto) {
-
+					auto printGraph = [&points](auto g) {
+						//for (auto& p : g)
+						//	printf("%d %d\n", p.first.x, p.first.y);
+						int hcell = Cst::CELL_SIZE >> 1;
+						points.clear();
+						for (auto& p : g) {
+							points.append( sf::Vertex(sf::Vector2f(p.first.x * Cst::CELL_SIZE + hcell, p.first.y * Cst::CELL_SIZE + hcell), sf::Color::Red) );
+						}
 					};
 					printGraph(g);
 				}
@@ -134,6 +146,7 @@ void testSFML(){
 		
 		player->draw(window);
 		world.draw(window);
+		window.draw(points);
 
 		ImGui::EndFrame();
 		ImGui::SFML::Render(window);

@@ -52,7 +52,6 @@ Wall 60 33
 Wall 61 34
 Wall 62 35
 Wall 63 36
-Wall 65 37
 Wall 66 38
 Wall 64 37
 Wall 67 39
@@ -99,3 +98,5 @@ Wall 97 40
 Wall 36 27
 Wall 36 28
 Wall 35 29
+Wall 20 51
+Wall 54 20
