@@ -144,6 +144,12 @@ void testSFML(){
 						int here = 0; // idx shoudl be 1
 					}
 
+					if(false)
+					{
+						dij.d[sf::Vector2i(1, 0)] = 66;
+						dij.updateDist(sf::Vector2i(1, 0), sf::Vector2i(0, 0));
+					}
+
 					//updateDist
 				}
 			}
