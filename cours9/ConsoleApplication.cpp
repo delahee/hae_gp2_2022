@@ -42,8 +42,16 @@ namespace std {
 
 
 
-
+static Dijkstra dij;
 static Player * player = nullptr;
+
+void printGraph(BaseGraph& g, sf::VertexArray & points) {
+	int hcell = Cst::CELL_SIZE >> 1;
+	points.clear();
+	for (auto& p : g) {
+		points.append(sf::Vertex(sf::Vector2f(p.first.x * Cst::CELL_SIZE + hcell, p.first.y * Cst::CELL_SIZE + hcell), sf::Color::Red));
+	}
+};
 
 void testSFML(){
 	player = new Player();
@@ -94,7 +102,11 @@ void testSFML(){
 
 			if (event.type == sf::Event::KeyReleased) {
 
-				if( event.key.code = sf::Keyboard::G){
+				if (event.key.code == sf::Keyboard::C) {
+					std::unordered_map<sf::Vector2i, bool> g;
+					dij.setGraph( g );
+				}
+				if( event.key.code == sf::Keyboard::G){
 					//creer un graph de toute les cases valides
 
 					//std::vector<> g <- contient toutes les cases (cx,cy) valides de notre jeu
@@ -109,29 +121,20 @@ void testSFML(){
 						if( !world.collides(x,y))
 							g[sf::Vector2i(x, y)] = true;
 					}
-					auto printGraph = [&points](auto g) {
-						//for (auto& p : g)
-						//	printf("%d %d\n", p.first.x, p.first.y);
-						int hcell = Cst::CELL_SIZE >> 1;
-						points.clear();
-						for (auto& p : g) {
-							points.append( sf::Vertex(sf::Vector2f(p.first.x * Cst::CELL_SIZE + hcell, p.first.y * Cst::CELL_SIZE + hcell), sf::Color::Red) );
-						}
-					};
-					printGraph(g);
+					
+					printGraph(g,points);
 
-					Dijkstra dij(g);
+					dij.setGraph(g);
 				}
 
-				if (event.key.code = sf::Keyboard::D) {
+				if (event.key.code == sf::Keyboard::D) {
 					std::unordered_map<sf::Vector2i, bool> g;
 					for (int y = 0; y < 2; ++y)
 						for (int x = 0; x < 4; ++x) {
 							if (!world.collides(x, y))
 								g[sf::Vector2i(x, y)] = true;
 						}
-					Dijkstra dij(g);
-					dij.init(sf::Vector2i(1, 1));
+					dij.setGraph(g);
 
 					if( false )
 					{
@@ -150,6 +153,8 @@ void testSFML(){
 						dij.updateDist(sf::Vector2i(1, 0), sf::Vector2i(0, 0));
 					}
 
+					dij.build(sf::Vector2i(1, 1));
+					printGraph(g, points);
 					//updateDist
 				}
 			}
@@ -159,11 +164,17 @@ void testSFML(){
 		bool t = true;
 		ImGui::SFML::Update(window, sf::Time( sf::seconds(dt)));
 		{
+			using namespace ImGui;
 			//ImGui::ShowDemoWindow(&t);
 
 			ImGui::Begin("Debug", &t);
 
 			player->im();
+
+			if( TreeNode("dijkstra")){
+				dij.im();
+				TreePop();
+			}
 
 			ImGui::End();
 		}

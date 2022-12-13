@@ -4,6 +4,8 @@
 #include <algorithm>
 
 #include "SFML/System/Vector2.hpp"
+#include "imgui.h"
+#include "imgui-SFML.h"
 
 namespace std {
 	template <> struct hash<sf::Vector2i> {
@@ -21,14 +23,19 @@ typedef std::vector<sf::Vector2i>						VertexList;
 
 class Dijkstra{
 public:
-	sf::Vector2i	start;
+	sf::Vector2i	start = sf::Vector2i(-1,-1);
 	BaseGraph		g;//les sommets
 	DistanceGraph	d;//les distances
-	AssocGraph		pred;
+	AssocGraph		pred;//a tout sommet S1 -> S2, qui est le predecesseur dans le chemin S1 -> Start => s2 
 
-	Dijkstra(BaseGraph& _g) {
-		g = _g;
+	Dijkstra() {
 	};
+
+	void setGraph(BaseGraph& _g){
+		g = _g;
+		d.clear();
+		pred.clear();
+	}
 
 	void init(sf::Vector2i _start) {
 		start = _start;
@@ -56,13 +63,58 @@ public:
 		float dx = s2.x - s1.x;
 		float dy = s2.y - s1.y;
 		return sqrt(dx * dx + dy * dy);
-	};;
+	};
 
-	void updateDist( sf::Vector2i s1, sf::Vector2i s2){
+	void updateDist(sf::Vector2i s1, sf::Vector2i s2) {
 		float ndist = d[s1] + heur(s1, s2);
 		if (d[s2] > ndist) {
 			d[s2] = ndist;
 			pred[s2] = s1;
+		}
+	};
+
+	void build(sf::Vector2i _start) {
+		init(_start);
+		VertexList q;
+		for (auto& p : g)
+			q.push_back(p.first);
+
+		sf::Vector2i tldr[4] = {
+			sf::Vector2i(0,1),
+			sf::Vector2i(0,-1),
+			sf::Vector2i(1,0),
+			sf::Vector2i(-1,0),
+		};
+
+		while (!q.empty()) {
+			int s1Idx = findMin(q);
+			if (s1Idx == -1) break;
+
+			sf::Vector2i s1 = q[s1Idx];
+			q.erase(q.begin() + s1Idx);
+
+			for (int i = 0; i < 4; ++i) {
+				auto s2 = tldr[i] + s1;
+				if (g.find(s2) == g.end()) continue;
+				updateDist(s1, s2);
+			}
+		}
+	};
+
+	void im(){
+		using namespace ImGui;
+		Value("start x", start.x);
+		Value("start y", start.y);
+		if( TreeNode("Preds")){
+			int idx = 0;
+			for(auto & p: pred){
+				if( TreeNode(std::to_string(idx).c_str())){
+					ImGui::LabelText("v","%d,%d -> %d,%d", p.first.x,p.first.y, p.second.x,p.second.y );
+					TreePop();
+				}
+				idx++;
+			}
+			TreePop();
 		}
 	}
 

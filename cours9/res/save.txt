@@ -100,3 +100,10 @@ Wall 36 28
 Wall 35 29
 Wall 20 51
 Wall 54 20
+Wall 47 14
+Wall 79 26
+Wall 79 27
+Wall 80 21
+Wall 80 20
+Wall 79 19
+Wall 78 18
