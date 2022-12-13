@@ -122,7 +122,30 @@ void testSFML(){
 
 					Dijkstra dij(g);
 				}
-				
+
+				if (event.key.code = sf::Keyboard::D) {
+					std::unordered_map<sf::Vector2i, bool> g;
+					for (int y = 0; y < 2; ++y)
+						for (int x = 0; x < 4; ++x) {
+							if (!world.collides(x, y))
+								g[sf::Vector2i(x, y)] = true;
+						}
+					Dijkstra dij(g);
+					dij.init(sf::Vector2i(1, 1));
+
+					if( false )
+					{
+						dij.d[sf::Vector2i(1, 3)] = 1000;
+						dij.d[sf::Vector2i(1, 0)] = 1;
+						VertexList q;
+						q.push_back(sf::Vector2i(1, 3));
+						q.push_back(sf::Vector2i(1, 0));
+						int idx = dij.findMin(q);
+						int here = 0; // idx shoudl be 1
+					}
+
+					//updateDist
+				}
 			}
 		}
 		
