@@ -13,6 +13,8 @@
 #include "CmdFile.hpp"
 #include "World.hpp"
 #include "imgui.h"
+#include <unordered_map>
+#include <algorithm>
 
 
 using namespace sf;
@@ -26,6 +28,20 @@ public:
 		rect->setOutlineThickness(2);
 	}
 };
+
+
+namespace std {
+	template <>
+	struct hash<sf::Vector2i> {
+		std::size_t operator()(const sf::Vector2i& k) const {
+			using std::size_t;
+			using std::hash;
+			using std::string;
+			return size_t((k.y << 16) | k.x);
+		}
+	};
+
+}
 
 
 static Player * player = nullptr;
@@ -68,11 +84,37 @@ void testSFML(){
 				//add block to world's statics
 				//add test against statics in world
 				world.poke(mcx, mcy);
-
 				std::vector<Cmd> cmds;
 				for(auto &s : world.statics)
 					cmds.push_back({ CmdId::Wall,s.x,s.y });
 				CmdFile::saveScript("res/save.txt",cmds);
+			}
+
+			if (event.type == sf::Event::KeyReleased) {
+
+				if( event.key.code = sf::Keyboard::G){
+					//creer un graph de toute les cases valides
+
+					//std::vector<> g <- contient toutes les cases (cx,cy) valides de notre jeu
+					//std::unordered_map<> g <- contient toutes les cases (cx,cy) valides de notre jeu
+
+					// le passer a "quelque chose" qui sera notre futur dijkstra
+					//appeler afficher graph( g )
+					
+					std::unordered_map<sf::Vector2i, bool> g;
+
+					for(int y = 0; y <  1 +Game::HEIGHT / Cst::CELL_SIZE; ++y)
+					for(int x = 0; x <  1 +Game::WIDTH / Cst::CELL_SIZE; ++x)
+					{
+						if( !world.collides(x,y))
+							g[sf::Vector2i(x, y)] = true;
+					}
+					auto printGraph = [](auto) {
+
+					};
+					printGraph(g);
+				}
+				
 			}
 		}
 		

@@ -12,7 +12,7 @@ void StateIdle::onEnterState() {
 }
 
 void StateIdle::onEvent(sf::Event& event) {
-	//owner->jumpControl(event);
+
 }
 
 void StateIdle::updateState() {

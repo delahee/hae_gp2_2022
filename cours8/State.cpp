@@ -2,8 +2,6 @@
 #include "Entities.hpp"
 
 
-static float FRICTX_GROUNDCONTROL = 0.9;
-static float FRICTX_AIRCONTROL = 0.75;
 inline static bool isCloseTo( float val, float target, float eps = 1e-3){
 	return abs(target - val) < eps;
 }
@@ -13,7 +11,6 @@ void StateIdle::onEnterState() {
 	owner->applyGravity = false;
 	owner->dx = 0;
 	owner->dy = 0;
-	owner->frictX = FRICTX_GROUNDCONTROL;
 }
 
 void StateIdle::onEvent(sf::Event& event) {
@@ -36,15 +33,10 @@ void StateIdle::updateState() {
 void StateJump::onEnterState() {
 	owner->shp->setFillColor(sf::Color::Magenta);
 	owner->applyGravity = true;
-	owner->frictX = FRICTX_AIRCONTROL;
-
 }
 
 
 void StateJump::onEvent(sf::Event& event) {
-	//no jump control
-
-	//coyote time
 	if(		(owner->stateLife <= 3.0f)
 		&&	!(owner->dy < 0 )){
 		owner->jumpControl(event);
@@ -63,8 +55,6 @@ void StateJump::updateState() {
 void StateWalk::onEnterState() {
 	owner->shp->setFillColor(sf::Color::Green);
 	owner->applyGravity = false;
-	owner->frictX = FRICTX_GROUNDCONTROL;
-
 }
 
 void StateWalk::onEvent(sf::Event& event) {
