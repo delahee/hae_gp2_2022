@@ -169,6 +169,7 @@
     <ClInclude Include="Catmull.hpp" />
     <ClInclude Include="CmdFile.hpp" />
     <ClInclude Include="Cst.hpp" />
+    <ClInclude Include="Dijkstra.hpp" />
     <ClInclude Include="Entities.hpp" />
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="imconfig.h" />

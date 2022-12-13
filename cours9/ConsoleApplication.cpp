@@ -15,6 +15,7 @@
 #include "imgui.h"
 #include <unordered_map>
 #include <algorithm>
+#include "Dijkstra.hpp"
 
 
 using namespace sf;
@@ -39,14 +40,7 @@ namespace std {
 	};
 }*/
 
-namespace std {
-	template <> struct hash<sf::Vector2i> {
-		std::size_t operator()(const sf::Vector2i& k) const {
-			using std::hash;
-			return std::size_t((k.y * 16 * 1024) + k.x);
-		};
-	};
-}
+
 
 
 static Player * player = nullptr;
@@ -125,6 +119,8 @@ void testSFML(){
 						}
 					};
 					printGraph(g);
+
+					Dijkstra dij(g);
 				}
 				
 			}
