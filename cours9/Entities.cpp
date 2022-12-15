@@ -13,6 +13,7 @@ Entity::Entity(sf::Vector2f pixelPos, sf::Shape* shp) {
 	setPixelPos(pixelPos);
 	idleState = new StateIdle(this);
 	walkState = new StateWalk(this);
+	pathState = new StatePath(this);
 
 	currentState = idleState;
 }
@@ -38,6 +39,7 @@ void Entity::im() {
 	DragFloat2("frict", &frictX, 0.01,0.5,1.0);
 	DragInt2("cx", &cx);
 	DragFloat2("rx", &rx);
+	DragFloat2("dx", &dx);
 	Value("pos x", shp->getPosition().x);
 	Value("pos y", shp->getPosition().y);
 }

@@ -11,6 +11,16 @@ public:
 	virtual void	updateState() {};
 };
 
+class StatePath : public State {
+public:
+	StatePath(Entity* e) {
+		owner = e;
+	}
+
+	virtual void onEnterState() override;
+	virtual void onEvent(sf::Event& ev) override;
+	virtual void updateState() override;
+};
 
 class StateIdle : public State{
 public:

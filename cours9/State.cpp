@@ -7,8 +7,8 @@ inline static bool isCloseTo( float val, float target, float eps = 1e-3){
 
 void StateIdle::onEnterState() {
 	owner->shp->setFillColor(sf::Color::Yellow);
-	owner->dx = 0;
-	owner->dy = 0;
+	owner->dx = 0.0f;
+	owner->dy = 0.0f;
 }
 
 void StateIdle::onEvent(sf::Event& event) {
@@ -18,9 +18,8 @@ void StateIdle::onEvent(sf::Event& event) {
 void StateIdle::updateState() {
 	owner->walkControl();
 	 
-	if (owner->dx != 0) {
-		if ((abs(owner->dy) >= 0.01f))
-			owner->changeState(owner->walkState);
+	if ( (abs(owner->dx) >=  0.0001f) || (abs(owner->dy) >= 0.0001f) ) {
+		owner->changeState(owner->walkState);
 	}
 }
 
@@ -41,4 +40,42 @@ void StateWalk::updateState() {
 	}
 }
 
+void StatePath::onEnterState() {
+	owner->shp->setFillColor(sf::Color::Red);
+}
 
+void StatePath::onEvent(sf::Event& ev) {
+
+}
+
+void StatePath::updateState() {
+	auto& path = owner->curPath;
+	if (path.empty()) {
+		owner->changeState(owner->idleState);
+		return;
+	}
+
+	sf::Vector2i next = path[0];
+	if( owner->cx == next.x && owner->cy == next.y){
+		path.erase(path.begin());
+		return;
+	}
+	else {
+		float dirX = next.x - owner->cx;
+		float dirY = next.y - owner->cy;
+
+		float len = sqrt(dirX * dirX + dirY * dirY);
+		if( len ){
+			dirX /= len;
+			dirY /= len;
+		}
+		else{
+			path.erase(path.begin());
+			return;
+		}
+
+		float sp = 0.2;
+		owner->dx = dirX * sp;
+		owner->dy = dirY * sp;
+	}
+}

@@ -29,6 +29,9 @@ public:
 	State*			currentState = nullptr;
 	State*			idleState = nullptr;
 	State*			walkState = nullptr;
+	State*			pathState = nullptr;
+
+	std::vector<sf::Vector2i> curPath;
 
 	Entity(sf::Vector2f pixelPos, sf::Shape* shp);
 

@@ -60,23 +60,10 @@ public:
 		return vertexIdx;
 	};
 
-	inline float heur(sf::Vector2i s1, sf::Vector2i s2) {
-		float dx = s2.x - s1.x;
-		float dy = s2.y - s1.y;
-		return sqrt(dx * dx + dy * dy);
-	};
-
+	float heur(const sf::Vector2i &s1, const sf::Vector2i &s2);
 	std::vector<sf::Vector2i> getPath(sf::Vector2i dest);
-
-	inline void updateDist(sf::Vector2i s1, sf::Vector2i s2) {
-		float ndist = d[s1] + heur(s1, s2);
-		if (d[s2] > ndist) {
-			d[s2] = ndist;
-			pred[s2] = s1;
-		}
-	};
-
-	void build(sf::Vector2i _start);;
+	void updateDist(const sf::Vector2i &s1,const  sf::Vector2i &s2);
+	void build(sf::Vector2i _start);
 
 	void im(){
 		using namespace ImGui;

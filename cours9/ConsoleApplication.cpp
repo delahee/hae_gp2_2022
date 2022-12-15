@@ -181,6 +181,13 @@ void testSFML(){
 				TreePop();
 			}
 
+			if(Button("Follow Path")){
+
+				player->curPath = dij.getPath(arrival);
+				std::reverse(player->curPath.begin(), player->curPath.end());
+				player->changeState(player->pathState);
+			}
+
 			ImGui::End();
 		}
 
