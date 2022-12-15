@@ -11,7 +11,7 @@ namespace std {
 	template <> struct hash<sf::Vector2i> {
 		inline std::size_t operator()(const sf::Vector2i& k) const {
 			using std::hash;
-			return std::size_t((k.y * 16 * 1024) + k.x);
+			return std::size_t((k.y << 12) + k.x);
 		};
 	};
 }
@@ -39,6 +39,7 @@ public:
 
 	void init(sf::Vector2i _start) {
 		start = _start;
+		d.reserve(g.size());
 		for (auto& s : g)
 			d[s.first] = 1024 * 1024;
 		d[start] = 0;
@@ -76,6 +77,7 @@ public:
 	void build(sf::Vector2i _start) {
 		init(_start);
 		VertexList q;
+		q.resize(g.size());
 		for (auto& p : g)
 			q.push_back(p.first);
 

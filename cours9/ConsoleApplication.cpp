@@ -53,6 +53,19 @@ void printGraph(BaseGraph& g, sf::VertexArray & points) {
 	}
 };
 
+void printDij(Dijkstra& g, sf::VertexArray& lines) {
+	int hcell = Cst::CELL_SIZE >> 1;
+	lines.clear();
+
+	sf::Color col = sf::Color(180, 0, 255, 200);
+	for(auto & p :dij.pred){
+		auto& from = p.first;
+		auto& to = p.second;
+		lines.append(sf::Vertex(sf::Vector2f(from.x * Cst::CELL_SIZE + hcell, from.y * Cst::CELL_SIZE + hcell), col));
+		lines.append(sf::Vertex(sf::Vector2f(to.x * Cst::CELL_SIZE + hcell, to.y * Cst::CELL_SIZE + hcell), col));
+	}
+}
+
 void testSFML(){
 	player = new Player();
 	std::cout << std::filesystem::current_path() << std::endl;
@@ -70,6 +83,9 @@ void testSFML(){
 
 	sf::VertexArray points;
 	points.setPrimitiveType(Points);
+
+	sf::VertexArray lines;
+	lines.setPrimitiveType(Lines);
 
 	auto bricks = CmdFile::loadScript("res/save.txt");
 	for( auto & c : bricks)
@@ -116,47 +132,19 @@ void testSFML(){
 					//appeler afficher graph( g )
 					
 					std::unordered_map<sf::Vector2i, bool> g;
-					for(int y = 0; y <  1 +Game::HEIGHT / Cst::CELL_SIZE; ++y)
-					for(int x = 0; x <  1 +Game::WIDTH / Cst::CELL_SIZE; ++x){
-						if( !world.collides(x,y))
-							g[sf::Vector2i(x, y)] = true;
-					}
-					
-					printGraph(g,points);
-
-					dij.setGraph(g);
-				}
-
-				if (event.key.code == sf::Keyboard::D) {
-					std::unordered_map<sf::Vector2i, bool> g;
-					for (int y = 0; y < 2; ++y)
-						for (int x = 0; x < 4; ++x) {
+					for(int y = 0; y <  1 + Game::HEIGHT / Cst::CELL_SIZE; ++y)
+						for (int x = 0; x < 1 + Game::WIDTH / Cst::CELL_SIZE; ++x) {
 							if (!world.collides(x, y))
 								g[sf::Vector2i(x, y)] = true;
 						}
+					
 					dij.setGraph(g);
-
-					if( false )
-					{
-						dij.d[sf::Vector2i(1, 3)] = 1000;
-						dij.d[sf::Vector2i(1, 0)] = 1;
-						VertexList q;
-						q.push_back(sf::Vector2i(1, 3));
-						q.push_back(sf::Vector2i(1, 0));
-						int idx = dij.findMin(q);
-						int here = 0; // idx shoudl be 1
-					}
-
-					if(false)
-					{
-						dij.d[sf::Vector2i(1, 0)] = 66;
-						dij.updateDist(sf::Vector2i(1, 0), sf::Vector2i(0, 0));
-					}
-
-					dij.build(sf::Vector2i(1, 1));
+					dij.build(sf::Vector2i(player->cx, player->cy));
 					printGraph(g, points);
-					//updateDist
+					printDij(dij, lines);
 				}
+
+				
 			}
 		}
 		
@@ -183,6 +171,7 @@ void testSFML(){
 		player->draw(window);
 		world.draw(window);
 		window.draw(points);
+		window.draw(lines);
 
 		ImGui::EndFrame();
 		ImGui::SFML::Render(window);

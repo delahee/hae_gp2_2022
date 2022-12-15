@@ -101,9 +101,14 @@ Wall 35 29
 Wall 20 51
 Wall 54 20
 Wall 47 14
-Wall 79 26
 Wall 79 27
-Wall 80 21
-Wall 80 20
 Wall 79 19
+Wall 79 21
+Wall 79 23
+Wall 79 22
+Wall 80 25
+Wall 80 23
+Wall 79 26
+Wall 82 20
+Wall 77 15
 Wall 78 18

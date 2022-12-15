@@ -38,8 +38,6 @@ void Entity::im() {
 	DragFloat2("frict", &frictX, 0.01,0.5,1.0);
 	DragInt2("cx", &cx);
 	DragFloat2("rx", &rx);
-	DragInt2("cy", &cy);
-	DragFloat2("ry", &ry);
 	Value("pos x", shp->getPosition().x);
 	Value("pos y", shp->getPosition().y);
 }
