@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ConsoleApplication.cpp" />
+    <ClCompile Include="Dijkstra.cpp" />
     <ClCompile Include="Entities.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Lib.cpp" />

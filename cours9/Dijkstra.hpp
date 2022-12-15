@@ -66,7 +66,9 @@ public:
 		return sqrt(dx * dx + dy * dy);
 	};
 
-	void updateDist(sf::Vector2i s1, sf::Vector2i s2) {
+	std::vector<sf::Vector2i> getPath(sf::Vector2i dest);
+
+	inline void updateDist(sf::Vector2i s1, sf::Vector2i s2) {
 		float ndist = d[s1] + heur(s1, s2);
 		if (d[s2] > ndist) {
 			d[s2] = ndist;
@@ -74,34 +76,7 @@ public:
 		}
 	};
 
-	void build(sf::Vector2i _start) {
-		init(_start);
-		VertexList q;
-		q.resize(g.size());
-		for (auto& p : g)
-			q.push_back(p.first);
-
-		sf::Vector2i tldr[4] = {
-			sf::Vector2i(0,1),
-			sf::Vector2i(0,-1),
-			sf::Vector2i(1,0),
-			sf::Vector2i(-1,0),
-		};
-
-		while (!q.empty()) {
-			int s1Idx = findMin(q);
-			if (s1Idx == -1) break;
-
-			sf::Vector2i s1 = q[s1Idx];
-			q.erase(q.begin() + s1Idx);
-
-			for (int i = 0; i < 4; ++i) {
-				auto s2 = tldr[i] + s1;
-				if (g.find(s2) == g.end()) continue;
-				updateDist(s1, s2);
-			}
-		}
-	};
+	void build(sf::Vector2i _start);;
 
 	void im(){
 		using namespace ImGui;

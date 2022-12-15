@@ -41,9 +41,13 @@ namespace std {
 }*/
 
 
-
+static Vector2i			arrival;
+static RectangleShape	arrivalShape;
 static Dijkstra dij;
 static Player * player = nullptr;
+static sf::VertexArray points;
+static sf::VertexArray lines;
+static sf::VertexArray path;
 
 void printGraph(BaseGraph& g, sf::VertexArray & points) {
 	int hcell = Cst::CELL_SIZE >> 1;
@@ -81,11 +85,18 @@ void testSFML(){
 
 	ImGui::SFML::Init(window);
 
-	sf::VertexArray points;
 	points.setPrimitiveType(Points);
-
-	sf::VertexArray lines;
 	lines.setPrimitiveType(Lines);
+
+	arrivalShape.setOutlineColor(sf::Color::Magenta);
+	arrivalShape.setFillColor(sf::Color::Green);
+	arrivalShape.setOutlineThickness(2);
+	arrivalShape.setSize(sf::Vector2f(6, 6));
+	arrivalShape.setOrigin(arrivalShape.getSize().x*0.5, arrivalShape.getSize().y * 0.5);
+
+
+
+	
 
 	auto bricks = CmdFile::loadScript("res/save.txt");
 	for( auto & c : bricks)
@@ -94,6 +105,7 @@ void testSFML(){
 	world.mkGraphics();
 	std::cout << "bricks read :" << std::to_string(bricks.size());
 	
+	bool refreshPath = true;
 	while (window.isOpen()) { // ONE FRAME
 		double dt = frameEnd - frameStart;
 		frameStart = Lib::getTimestamp();
@@ -132,16 +144,16 @@ void testSFML(){
 					//appeler afficher graph( g )
 					
 					std::unordered_map<sf::Vector2i, bool> g;
-					for(int y = 0; y <  1 + Game::HEIGHT / Cst::CELL_SIZE; ++y)
-						for (int x = 0; x < 1 + Game::WIDTH / Cst::CELL_SIZE; ++x) {
+					for(int y = 0; y <  1 + (Game::HEIGHT / Cst::CELL_SIZE); ++y)
+						for (int x = 0; x < 1 + (Game::WIDTH / Cst::CELL_SIZE); ++x) {
 							if (!world.collides(x, y))
 								g[sf::Vector2i(x, y)] = true;
 						}
-					
 					dij.setGraph(g);
 					dij.build(sf::Vector2i(player->cx, player->cy));
 					printGraph(g, points);
 					printDij(dij, lines);
+					refreshPath = true;
 				}
 
 				
@@ -159,6 +171,11 @@ void testSFML(){
 
 			player->im();
 
+			if (DragInt2("arrival", &arrival.x)) {
+				arrivalShape.setPosition(sf::Vector2f(arrival.x * Cst::CELL_SIZE + Cst::CELL_SIZE * 0.5, arrival.y * Cst::CELL_SIZE + Cst::CELL_SIZE * 0.5));
+				refreshPath = true;
+			}
+	
 			if( TreeNode("dijkstra")){
 				dij.im();
 				TreePop();
@@ -166,12 +183,24 @@ void testSFML(){
 
 			ImGui::End();
 		}
+
+		if (refreshPath) {
+			auto pathToArrival = dij.getPath(arrival);
+			
+			path.setPrimitiveType(LineStrip);
+			path.clear();
+			for(auto & vtx: pathToArrival)
+				path.append(sf::Vertex(sf::Vector2f(vtx.x*Cst::CELL_SIZE + Cst::CELL_SIZE*0.5f, vtx.y * Cst::CELL_SIZE + Cst::CELL_SIZE * 0.5f),sf::Color::Blue));
+			refreshPath = false;
+		}
 		window.clear();
 		
 		player->draw(window);
 		world.draw(window);
 		window.draw(points);
 		window.draw(lines);
+		window.draw(arrivalShape);
+		window.draw(path);
 
 		ImGui::EndFrame();
 		ImGui::SFML::Render(window);
